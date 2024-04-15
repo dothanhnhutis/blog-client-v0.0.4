@@ -11,6 +11,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import Link from "next/link";
+import { UploadMutiple } from "./upload-custom";
 const CreateProductPage = async () => {
   const [currentUser, categories] = await Promise.all([
     getCurrentUser(),
@@ -26,15 +27,19 @@ const CreateProductPage = async () => {
             </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
+          <BreadcrumbLink asChild>
+            <Link href="/manager/products">Products</Link>
+          </BreadcrumbLink>
+          <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>Products</BreadcrumbPage>
+            <BreadcrumbPage>Create</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
       <div className="flex items-center justify-between gap-2 my-2">
         <h2 className="lg:text-2xl font-bold text-lg">Manager Product</h2>
       </div>
-
+      <UploadMutiple aspectRatio={1}>asdasd</UploadMutiple>
       <ProductForm
         type="create"
         currentUser={currentUser!}

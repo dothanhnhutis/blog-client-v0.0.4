@@ -31,7 +31,9 @@ export const getAspectRatio = (url: string): Promise<number> => {
     img.onload = function (event) {
       resolve(img.width / img.height);
     };
-    img.onerror = reject;
+    img.onerror = () => {
+      reject("There was some problem with the image.");
+    };
   });
 };
 
@@ -43,6 +45,8 @@ export const getData = (file: File): Promise<string> => {
       const result = reader.result as string;
       resolve(result);
     };
-    reader.onerror = reject;
+    reader.onerror = () => {
+      reject("There was some problem with the image.");
+    };
   });
 };
