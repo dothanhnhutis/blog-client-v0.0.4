@@ -28,6 +28,7 @@ import { CategoryDialog } from "./category-modal";
 import TiptapEditor from "@/components/tiptap-editor";
 import { User } from "@/schemas/user";
 import { createProduct, editProduct } from "@/service/api/product";
+import { UploadMutiple } from "./create/upload-custom";
 
 type ProductFormProps = {
   currentUser: User;
@@ -124,7 +125,16 @@ export const ProductForm = ({
     <form onSubmit={handlerSubmit}>
       <div className="pb-4">
         <h2 className="font-semibold text-2xl">Media</h2>
-
+        <UploadMutiple
+          onchange={(images) => {
+            setForm((prev) => ({
+              ...prev,
+              images: [...prev.images, ...images],
+            }));
+          }}
+        >
+          sdasd
+        </UploadMutiple>
         <div className="grid xl:grid-cols-2 gap-4">
           <div>
             <h3 className="font-semibold text-base mt-5">Product image</h3>

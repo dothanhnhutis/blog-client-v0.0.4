@@ -11,41 +11,44 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import Link from "next/link";
-import { UploadMutiple } from "./upload-custom";
+import { ProductLayout } from "./product-layout";
 const CreateProductPage = async () => {
   const [currentUser, categories] = await Promise.all([
     getCurrentUser(),
     getAllCategory(),
   ]);
   return (
-    <div className="w-full xl:max-w-screen-xl xl:mx-auto p-4 overflow-hidden">
-      <Breadcrumb>
-        <BreadcrumbList>
-          <BreadcrumbItem>
+    <>
+      <ProductLayout />
+
+      <div className="w-full xl:max-w-screen-xl xl:mx-auto p-4 overflow-hidden">
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <Link href="/manager">Home</Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
             <BreadcrumbLink asChild>
-              <Link href="/manager">Home</Link>
+              <Link href="/manager/products">Products</Link>
             </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator />
-          <BreadcrumbLink asChild>
-            <Link href="/manager/products">Products</Link>
-          </BreadcrumbLink>
-          <BreadcrumbSeparator />
-          <BreadcrumbItem>
-            <BreadcrumbPage>Create</BreadcrumbPage>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
-      <div className="flex items-center justify-between gap-2 my-2">
-        <h2 className="lg:text-2xl font-bold text-lg">Manager Product</h2>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>Create</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+        <div className="flex items-center justify-between gap-2 my-2">
+          <h2 className="lg:text-2xl font-bold text-lg">Manager Product</h2>
+        </div>
+        <ProductForm
+          type="create"
+          currentUser={currentUser!}
+          categories={categories}
+        />
       </div>
-      <UploadMutiple>asdasd</UploadMutiple>
-      <ProductForm
-        type="create"
-        currentUser={currentUser!}
-        categories={categories}
-      />
-    </div>
+    </>
   );
 };
 

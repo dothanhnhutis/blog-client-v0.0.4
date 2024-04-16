@@ -67,7 +67,7 @@ type UploadMutipleType = {
   title?: string;
   subTitle?: string;
   children?: React.ReactNode;
-  onchange?: (image: string) => void;
+  onchange?: (images: string[]) => void;
   aspectRatio?: AspectImageType[] | number;
 };
 
@@ -82,7 +82,7 @@ export const UploadMutiple = ({
   title,
   subTitle,
   aspectRatio = defaultAspectImage,
-  onchange = () => {},
+  onchange = (images: string[]) => {},
   children,
 }: UploadMutipleType) => {
   const id = useId();
@@ -132,7 +132,73 @@ export const UploadMutiple = ({
     setFiles(files);
     setIndexCroppers(tempIndex);
   };
-  console.log(files);
+
+  // useEffect(() => {
+  //   if (files.every((file) => file.base64)) {
+  //     onchange1(files.map((f) => f.base64!));
+  //   }
+  //   console.log(files.every((file) => file.base64));
+
+  //   console.log(files);
+  //   console.log(currentIndex);
+  // }, [files, currentIndex, onchange1]);
+
+  const handleNextOrPrev = (type: "next" | "prev") => {
+    const cropper = cropperRef.current?.cropper;
+
+    if (type == "next") {
+      if (
+        indexCroppers.length == 1 ||
+        currentIndex == indexCroppers.length - 1
+      ) {
+        if (cropper)
+          onchange(
+            files.map((file, index) => {
+              if (index != indexCroppers[currentIndex]) return file.base64!;
+              return cropper.getCroppedCanvas().toDataURL();
+            })
+          );
+
+        handleClear();
+      } else {
+        setFiles(
+          files.map((file, index) => {
+            if (index != indexCroppers[currentIndex]) return file;
+            return {
+              ...file,
+              base64: cropper?.getCroppedCanvas().toDataURL(),
+            };
+          })
+        );
+        setCurrentIndex((prev) => prev + 1);
+      }
+    } else {
+      if (files[indexCroppers[currentIndex]]) {
+        files.map((file, index) => {
+          if (index != indexCroppers[currentIndex]) return file;
+          return {
+            ...file,
+            base64: undefined,
+          };
+        });
+      }
+      if (currentIndex == 0) {
+        handleClear();
+      } else {
+        setCurrentIndex((prev) => prev - 1);
+      }
+    }
+  };
+
+  const handleClear = () => {
+    files.forEach((file) => {
+      URL.revokeObjectURL(file.url);
+    });
+    setFiles([]);
+    setIndexCroppers([]);
+    setCurrentIndex(0);
+    setOpen(false);
+  };
 
   const handleZoomIn = () => {
     const cropper = cropperRef.current?.cropper;
@@ -288,26 +354,15 @@ export const UploadMutiple = ({
           </div>
 
           <AlertDialogFooter>
-            {currentIndex == indexCroppers[0] ? (
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-            ) : (
-              <Button onClick={() => setCurrentIndex((prev) => prev - 1)}>
-                Prev
-              </Button>
-            )}
-
-            {indexCroppers.length == 0 ||
-            currentIndex == indexCroppers.length - 1 ? (
-              <AlertDialogAction>Upload</AlertDialogAction>
-            ) : (
-              <Button
-                onClick={() => {
-                  setCurrentIndex((prev) => prev + 1);
-                }}
-              >
-                Next
-              </Button>
-            )}
+            <Button onClick={() => handleNextOrPrev("prev")}>
+              {currentIndex == 0 ? "Cancel" : "Prev"}
+            </Button>
+            <Button onClick={() => handleNextOrPrev("next")}>
+              {indexCroppers.length == 1 ||
+              currentIndex == indexCroppers.length - 1
+                ? "Upload"
+                : "Next"}
+            </Button>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
