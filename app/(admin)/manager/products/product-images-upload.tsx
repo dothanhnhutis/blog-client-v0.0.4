@@ -170,7 +170,7 @@ export const ProductImagesUpload = ({
   onDelete,
 }: IProductImagesUpload) => {
   return (
-    <div className="grid w-full max-w-[460px] grid-cols-3 xs:grid-cols-4 gap-3 my-4">
+    <div className="grid w-full min-h-[280px] min-w-[280px] max-w-[460px] grid-cols-3 xs:grid-cols-4 gap-3 my-4">
       {imageUploads.map((data, index) => (
         <div
           key={index}

@@ -39,7 +39,7 @@ const CreateProductPage = async () => {
       <div className="flex items-center justify-between gap-2 my-2">
         <h2 className="lg:text-2xl font-bold text-lg">Manager Product</h2>
       </div>
-      <UploadMutiple aspectRatio={1}>asdasd</UploadMutiple>
+      <UploadMutiple>asdasd</UploadMutiple>
       <ProductForm
         type="create"
         currentUser={currentUser!}
