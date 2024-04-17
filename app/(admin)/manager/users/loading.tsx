@@ -28,7 +28,6 @@ const UserManagerLoadingPage = () => {
       <div className="flex items-center justify-between gap-2 my-2">
         <h2 className="lg:text-2xl font-bold text-lg">Manager User</h2>
       </div>
-
       <Loading />
     </div>
   );

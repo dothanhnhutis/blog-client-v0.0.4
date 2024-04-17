@@ -93,8 +93,10 @@ export const UploadMutiple = ({
   const [currentIndex, setCurrentIndex] = useState<number>(0);
 
   useEffect(() => {
-    if (indexCroppers.length > 0) setOpen(true);
-  }, [indexCroppers]);
+    if (indexCroppers.length > 0) {
+      setOpen(true);
+    }
+  }, [files, indexCroppers, onchange]);
 
   const handleOnchange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
@@ -129,21 +131,17 @@ export const UploadMutiple = ({
       });
     }
     e.target.value = "";
-    setFiles(files);
-    setIndexCroppers(tempIndex);
+    if (tempIndex.length > 0) {
+      setFiles(files);
+      setIndexCroppers(tempIndex);
+      setOpen(true);
+    } else {
+      onchange(files.map((file) => file.base64!));
+      handleClear();
+    }
   };
 
-  // useEffect(() => {
-  //   if (files.every((file) => file.base64)) {
-  //     onchange1(files.map((f) => f.base64!));
-  //   }
-  //   console.log(files.every((file) => file.base64));
-
-  //   console.log(files);
-  //   console.log(currentIndex);
-  // }, [files, currentIndex, onchange1]);
-
-  const handleNextOrPrev = (type: "next" | "prev") => {
+  const handleAction = (type: "next" | "prev") => {
     const cropper = cropperRef.current?.cropper;
 
     if (type == "next") {
@@ -354,10 +352,10 @@ export const UploadMutiple = ({
           </div>
 
           <AlertDialogFooter>
-            <Button onClick={() => handleNextOrPrev("prev")}>
+            <Button onClick={() => handleAction("prev")}>
               {currentIndex == 0 ? "Cancel" : "Prev"}
             </Button>
-            <Button onClick={() => handleNextOrPrev("next")}>
+            <Button onClick={() => handleAction("next")}>
               {indexCroppers.length == 1 ||
               currentIndex == indexCroppers.length - 1
                 ? "Upload"
