@@ -107,19 +107,25 @@ const ProductImage = ({
       {isUpload ? (
         <ImageIcon className="size-6 flex-shrink-0 text-gray-400 dark:text-white" />
       ) : (
-        <Image src={icon ?? Box1.src} alt={"alt"} width="64" height="64" />
+        <Image
+          src={icon ?? Box1.src}
+          alt={"alt"}
+          width="64"
+          height="64"
+          className="size"
+        />
       )}
       <p
         className={cn(
           id == 0
-            ? "text-sm font-semibold"
+            ? "text-xs font-semibold"
             : "text-[#00000059] text-xs dark:text-white max-w-[80px] truncate"
         )}
       >
         {isUpload ? "Upload image" : name}
       </p>
       {id == 0 && (
-        <ul className="list-disc text-start text-xs text-[#00000059] dark:text-white px-4 ml-4 hidden xs:block ">
+        <ul className="list-disc text-start text-xs text-[#00000059] dark:text-white px-4 ml-4 hidden min-[400px]:block ">
           <li>
             <p>Dimensions: 800 x 600px</p>
           </li>
@@ -168,11 +174,11 @@ export const ProductImagesUpload = ({
   onDelete,
 }: IProductImagesUpload) => {
   return (
-    <div className="grid w-full min-h-[280px] min-w-[280px] max-w-[460px] grid-cols-3 xs:grid-cols-4 gap-3 my-4">
+    <div className="grid w-full grid-cols-3 min-[400px]:grid-cols-4 gap-3 my-4 order-first md:order-none max-w-[460px]">
       {imageUploads.map((data, index) => (
         <div
           key={index}
-          className="aspect-square size-full xs:first:col-span-2 xs:first:row-span-2 xs:first:size-56 overflow-hidden"
+          className="aspect-square size-full min-[400px]:first:col-span-2 min-[400px]:first:row-span-2 overflow-hidden"
         >
           <ProductImage
             {...data}
