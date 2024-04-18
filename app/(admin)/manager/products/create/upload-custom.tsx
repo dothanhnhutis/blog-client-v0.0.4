@@ -3,14 +3,11 @@ import React, { useEffect, useId, useRef, useState } from "react";
 import { getAspectRatio, getData } from "@/lib/utils";
 import {
   AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Cropper, ReactCropperElement } from "react-cropper";
 import { toast } from "sonner";
@@ -66,6 +63,8 @@ const defaultAspectImage: AspectImageType[] = [
 type UploadMutipleType = {
   title?: string;
   subTitle?: string;
+  multiple?: boolean;
+  accept?: string;
   children?: React.ReactNode;
   onchange?: (images: string[]) => void;
   aspectRatio?: AspectImageType[] | number;
@@ -81,6 +80,8 @@ type DataFile = {
 export const UploadMutiple = ({
   title,
   subTitle,
+  multiple = false,
+  accept,
   aspectRatio = defaultAspectImage,
   onchange = (images: string[]) => {},
   children,
@@ -240,8 +241,8 @@ export const UploadMutiple = ({
           onChange={handleOnchange}
           type="file"
           className="hidden"
-          accept="image/*"
-          multiple
+          accept={accept}
+          multiple={multiple}
           id={id}
         />
       </label>

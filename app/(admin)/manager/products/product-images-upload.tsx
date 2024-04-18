@@ -74,18 +74,14 @@ const ProductImage = ({
       <Skeleton className="size-full" />
     ) : (
       <div className="relative group overflow-hidden">
-        {/* <AspectRatio ratio={1 / 1}> */}
         <Image
           src={image}
           alt={alt}
           priority
-          // fill
           width={600}
           height={600}
-          // sizes="(min-width: 560px) 224px, calc(33.33vw - 40px)"
           className="object-contain rounded-md aspect-square"
         />
-        {/* </AspectRatio> */}
 
         <div className="bg-black/50 absolute top-0 left-0 right-0 bottom-0 z-10 rounded-md invisible group-hover:visible">
           <div className="flex items-center justify-center h-full gap-1">
