@@ -12,6 +12,8 @@ import {
 } from "@/components/ui/breadcrumb";
 import Link from "next/link";
 import { ProductLayout } from "./product-layout";
+import { CreateProduct } from "./create";
+import { UploadMutiple } from "./upload-custom";
 const CreateProductPage = async () => {
   const [currentUser, categories] = await Promise.all([
     getCurrentUser(),
@@ -19,8 +21,17 @@ const CreateProductPage = async () => {
   ]);
   return (
     <>
-      <ProductLayout />
-
+      <ProductForm
+        type="create"
+        currentUser={currentUser!}
+        categories={categories}
+      />
+      {/* <CreateProduct currentUser={currentUser!} categories={categories} /> */}
+      {/* <ProductForm
+        type="create"
+        currentUser={currentUser!}
+        categories={categories}
+      />
       <div className="w-full xl:max-w-screen-xl xl:mx-auto p-4 overflow-hidden">
         <Breadcrumb>
           <BreadcrumbList>
@@ -47,7 +58,7 @@ const CreateProductPage = async () => {
           currentUser={currentUser!}
           categories={categories}
         />
-      </div>
+      </div> */}
     </>
   );
 };

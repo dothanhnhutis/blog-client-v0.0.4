@@ -22,8 +22,9 @@ export const productFormSchema = z.object({
   isActive: z.boolean().optional().default(true),
 });
 
-export type ProductFormType = z.infer<typeof productFormSchema>;
-export type Product = ProductFormType & {
+export type ProductFormPayload = z.infer<typeof productFormSchema>;
+
+export type Product = ProductFormPayload & {
   id: string;
   category: {
     name: string;

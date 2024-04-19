@@ -42,6 +42,7 @@ import Box5 from "@/images/icons/box5.png";
 import Box6 from "@/images/icons/box6.png";
 import Box7 from "@/images/icons/box7.png";
 import Box8 from "@/images/icons/box8.png";
+
 import { cn } from "@/lib/utils";
 import { UploadMutiple } from "./upload-custom";
 
@@ -157,7 +158,7 @@ export const ProductLayout = () => {
   const status: string = "image";
   return (
     <>
-      <div className="sticky top-[73px] w-full backdrop-saturate-[1.8] backdrop-blur bg-background/50">
+      <div className="sticky top-[73px] w-full backdrop-saturate-[1.8] backdrop-blur bg-background/50 z-50">
         <div className="w-full xl:max-w-screen-xl xl:mx-auto p-4 overflow-hidden">
           <Breadcrumb>
             <BreadcrumbList>
