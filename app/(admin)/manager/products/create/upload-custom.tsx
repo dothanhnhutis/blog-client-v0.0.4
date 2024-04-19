@@ -355,7 +355,10 @@ export const UploadMutiple = ({
           </div>
 
           <AlertDialogFooter>
-            <Button onClick={() => handleAction("prev")}>
+            <Button
+              variant={currentIndex == 0 ? "outline" : "default"}
+              onClick={() => handleAction("prev")}
+            >
               {currentIndex == 0 ? "Cancel" : "Prev"}
             </Button>
             <Button onClick={() => handleAction("next")}>

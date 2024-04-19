@@ -21,11 +21,7 @@ const CreateProductPage = async () => {
   ]);
   return (
     <>
-      <ProductForm
-        type="create"
-        currentUser={currentUser!}
-        categories={categories}
-      />
+      <ProductForm currentUser={currentUser!} categories={categories} />
       {/* <CreateProduct currentUser={currentUser!} categories={categories} /> */}
       {/* <ProductForm
         type="create"

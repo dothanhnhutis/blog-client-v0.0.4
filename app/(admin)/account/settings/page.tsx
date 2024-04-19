@@ -24,7 +24,10 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import Link from "next/link";
-const SettingPage = () => {
+import { getCurrentUser } from "@/service/api/user";
+const SettingPage = async () => {
+  const currentUser = await getCurrentUser();
+
   return (
     <div className="w-full xl:max-w-screen-xl xl:mx-auto p-2 sm:p-4 overflow-hidden">
       <Breadcrumb>
@@ -101,7 +104,12 @@ const SettingPage = () => {
 
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button variant="destructive">Delete your account</Button>
+              <Button
+                variant="destructive"
+                disabled={currentUser?.role == "ADMIN"}
+              >
+                Delete your account
+              </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
@@ -113,7 +121,7 @@ const SettingPage = () => {
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction>Continue</AlertDialogAction>
+                <AlertDialogAction>Delete</AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>

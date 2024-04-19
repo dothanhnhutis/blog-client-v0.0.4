@@ -53,17 +53,6 @@ const CreateUserPage = () => {
   };
   return (
     <form onSubmit={handleSubmit} className="bg-background p-4 rounded-lg">
-      <button
-        type="button"
-        onClick={() => {
-          toast.custom((t) => (
-            <div>
-              <h1>Custom toast</h1>
-              <button onClick={() => toast.dismiss(t)}>Dismiss</button>
-            </div>
-          ));
-        }}
-      ></button>
       <div className="grid grid-cols-1 md:grid-cols-2 md:grid-rows-3 md:grid-flow-col gap-4">
         <div className="flex flex-col space-y-1.5 ">
           <Label htmlFor="email">Email</Label>

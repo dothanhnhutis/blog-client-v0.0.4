@@ -236,18 +236,18 @@ export const ProductForm = ({
             console.log(error);
           });
       } else {
-        editProduct(id, form)
-          .then((data) => {
-            if (data.statusCode == 200) {
-              router.push("/manager/products");
-              toast.success(data.message);
-            } else {
-              toast.success(data.message);
-            }
-          })
-          .catch((error) => {
-            console.log(error);
-          });
+        // editProduct(id, form)
+        //   .then((data) => {
+        //     if (data.statusCode == 200) {
+        //       router.push("/manager/products");
+        //       toast.success(data.message);
+        //     } else {
+        //       toast.success(data.message);
+        //     }
+        //   })
+        //   .catch((error) => {
+        //     console.log(error);
+        //   });
       }
     });
   };
@@ -279,274 +279,285 @@ export const ProductForm = ({
         </div>
       </div>
       <div className="w-full xl:max-w-screen-xl xl:mx-auto p-4 overflow-hidden">
-        <h2 className="font-semibold text-2xl">Media</h2>
-        <div className="bg-card max-w-[460px] p-4 rounded-lg">
-          <h3 className="font-semibold text-base">Product image</h3>
-          <p className="text-muted-foreground text-xs">
-            {`It's recommended to include at least 1 images to adequately your
+        <div className="grid xl:grid-cols-[1fr_1fr_460px] gap-4">
+          <div className="xl:order-last col-span-2 xl:col-span-1">
+            <div className="bg-card max-w-[460px] p-4 rounded-lg ">
+              <h3 className="font-semibold text-base">Product image</h3>
+              <p className="text-muted-foreground text-xs">
+                {`It's recommended to include at least 1 images to adequately your
           product.`}
-          </p>
+              </p>
 
-          <div className="grid w-full grid-cols-3 min-[400px]:grid-cols-4 gap-3 mt-4">
-            <div className="aspect-square size-full min-[400px]:first:col-span-2 min-[400px]:first:row-span-2 overflow-hidden">
-              {form.images[0] ? (
-                <div className="relative group overflow-hidden border rounded-md">
-                  <Image
-                    src={form.images[0]}
-                    alt="Main image"
-                    priority
-                    width={600}
-                    height={600}
-                    className="object-contain rounded-md aspect-square"
-                  />
+              <div className="grid w-full grid-cols-3 min-[400px]:grid-cols-4 gap-3 mt-4">
+                <div className="aspect-square size-full min-[400px]:first:col-span-2 min-[400px]:first:row-span-2 overflow-hidden">
+                  {form.images[0] ? (
+                    <div className="relative group overflow-hidden border rounded-md">
+                      <Image
+                        src={form.images[0]}
+                        alt="Main image"
+                        priority
+                        width={600}
+                        height={600}
+                        className="object-contain rounded-md aspect-square"
+                      />
 
-                  <div className="bg-black/50 absolute top-0 left-0 right-0 bottom-0 z-10 rounded-md invisible group-hover:visible">
-                    <div className="flex items-center justify-center h-full gap-1 text-white">
-                      <EyeIcon className="w-4 h-4" />
-                      <EditIcon className="w-4 h-4" />
-                      <TrashIcon
-                        className="w-4 h-4 cursor-pointer flex-shrink-0 "
-                        onClick={() => {
+                      <div className="bg-black/50 absolute top-0 left-0 right-0 bottom-0 z-10 rounded-md invisible group-hover:visible">
+                        <div className="flex items-center justify-center h-full gap-1 text-white">
+                          <EyeIcon className="w-4 h-4" />
+                          <EditIcon className="w-4 h-4" />
+                          <TrashIcon
+                            className="w-4 h-4 cursor-pointer flex-shrink-0 "
+                            onClick={() => {
+                              setForm((prev) => ({
+                                ...prev,
+                                images: prev.images.filter((_, ix) => ix != 0),
+                              }));
+                            }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <UploadMutiple
+                      multiple
+                      onchange={(images) => {
+                        if (images.length + form.images.length <= 9) {
                           setForm((prev) => ({
                             ...prev,
-                            images: prev.images.filter((_, ix) => ix != 0),
+                            images: [...prev.images, ...images],
                           }));
-                        }}
-                      />
-                    </div>
-                  </div>
+                        } else {
+                          toast("asdasdsa");
+                        }
+                      }}
+                    >
+                      <div className="flex flex-col justify-center items-center text-center h-full gap-2 size-full border-dashed border rounded-md cursor-pointer hover:border-primary">
+                        <ImageIcon className="size-6 flex-shrink-0 text-muted-foreground" />
+                        <p className="min-[400px]:hidden text-xs font-medium">
+                          Upload image
+                        </p>
+                        <ul className="list-disc text-start text-xs text-muted-foreground px-4 ml-4 hidden min-[400px]:block ">
+                          <li>
+                            <p>Dimensions: 800 x 600px</p>
+                          </li>
+                          <li>
+                            <p>Maximum file size: 5MB (Up to 9 files)</p>
+                          </li>
+                          <li>
+                            <p>Format: JPG, JPEG, PNG</p>
+                          </li>
+                        </ul>
+                      </div>
+                    </UploadMutiple>
+                  )}
                 </div>
-              ) : (
-                <UploadMutiple
-                  multiple
-                  onchange={(images) => {
-                    if (images.length + form.images.length <= 9) {
+                {imageUploads.map((img, i) => (
+                  <ProductImage
+                    key={i}
+                    {...img}
+                    src={form.images[i + 1]}
+                    isUpload={
+                      form.images[i] != undefined && !form.images[i + 1]
+                    }
+                    onSave={(images) => {
+                      if (images.length + form.images.length <= 9) {
+                        setForm((prev) => ({
+                          ...prev,
+                          images: [...prev.images, ...images],
+                        }));
+                      } else {
+                        toast("asdasdsa");
+                      }
+                    }}
+                    onDelete={() => {
                       setForm((prev) => ({
                         ...prev,
-                        images: [...prev.images, ...images],
+                        images: prev.images.filter((_, ix) => ix != i + 1),
                       }));
-                    } else {
-                      toast("asdasdsa");
-                    }
-                  }}
-                >
-                  <div className="flex flex-col justify-center items-center text-center h-full gap-2 size-full border-dashed border rounded-md cursor-pointer hover:border-primary">
-                    <ImageIcon className="size-6 flex-shrink-0 text-muted-foreground" />
-                    <p className="min-[400px]:hidden text-xs font-medium">
-                      Upload image
-                    </p>
-                    <ul className="list-disc text-start text-xs text-muted-foreground px-4 ml-4 hidden min-[400px]:block ">
-                      <li>
-                        <p>Dimensions: 800 x 600px</p>
-                      </li>
-                      <li>
-                        <p>Maximum file size: 5MB (Up to 9 files)</p>
-                      </li>
-                      <li>
-                        <p>Format: JPG, JPEG, PNG</p>
-                      </li>
-                    </ul>
-                  </div>
-                </UploadMutiple>
-              )}
-            </div>
-            {imageUploads.map((img, i) => (
-              <ProductImage
-                key={i}
-                {...img}
-                src={form.images[i + 1]}
-                isUpload={form.images[i] != undefined && !form.images[i + 1]}
-                onSave={(images) => {
-                  if (images.length + form.images.length <= 9) {
-                    setForm((prev) => ({
-                      ...prev,
-                      images: [...prev.images, ...images],
-                    }));
-                  } else {
-                    toast("asdasdsa");
-                  }
-                }}
-                onDelete={() => {
-                  setForm((prev) => ({
-                    ...prev,
-                    images: prev.images.filter((_, ix) => ix != i + 1),
-                  }));
-                }}
-              />
-            ))}
-          </div>
-        </div>
-        <h2 className="font-semibold text-xl">Product Detail</h2>
-        <div className="flex flex-wrap w-full gap-4 mt-4">
-          <div className="flex flex-col space-y-1.5 col-span-2 md:col-auto w-full md:flex-[1_1_calc(50%-16px)]">
-            <Label htmlFor="name">Name</Label>
-            <Input
-              value={form.productName}
-              onChange={(e) =>
-                setForm((prev) => ({
-                  ...prev,
-                  productName: e.target.value,
-                }))
-              }
-              id="name"
-              name="name"
-              className="focus-visible:ring-transparent "
-              placeholder="Name of your product"
-            />
-          </div>
-          <div className="flex flex-col space-y-1.5 col-span-2 md:col-auto w-full md:flex-[1_1_calc(50%-16px)]">
-            <Label htmlFor="code">Code</Label>
-            <Input
-              value={form.code}
-              onChange={(e) =>
-                setForm((prev) => ({
-                  ...prev,
-                  code: e.target.value,
-                }))
-              }
-              id="code"
-              name="code"
-              className="focus-visible:ring-transparent "
-              placeholder="Code"
-            />
-          </div>
-          <div className="flex flex-col space-y-1.5 col-span-2 md:col-auto w-full md:flex-[1_1_calc(50%-16px)]">
-            <Label htmlFor="slug">Slug</Label>
-            <div className="flex gap-2">
-              <Input
-                disabled={isLockSlug}
-                id="slug"
-                name="slug"
-                className="focus-visible:ring-transparent "
-                placeholder="Name of your project"
-                value={form.slug}
-                onChange={(e) =>
-                  setForm((prev) => ({
-                    ...prev,
-                    slug: e.target.value,
-                  }))
-                }
-              />
-              <Button
-                type="button"
-                variant="secondary"
-                onClick={() => setIsLockSlug(!isLockSlug)}
-              >
-                {!isLockSlug ? (
-                  <UnlockIcon className="w-4 h-4" />
-                ) : (
-                  <LockIcon className="w-4 h-4" />
-                )}
-              </Button>
-            </div>
-          </div>
-          <div className="flex flex-col space-y-1.5 col-span-2 md:col-auto w-full md:flex-[1_1_calc(50%-16px)]">
-            <Label htmlFor="status">Active</Label>
-            <div className="flex items-center justify-between h-full">
-              <p className="text-xs font-light text-muted-foreground mt-1">
-                Do you want product to be public?
-              </p>
-              <Switch
-                id="status"
-                checked={form.isActive}
-                onCheckedChange={(checked) =>
-                  setForm((prev) => ({ ...prev, isActive: checked }))
-                }
-              />
-            </div>
-          </div>
-
-          <div className="flex flex-col space-y-1.5 col-span-2 md:col-auto w-full md:flex-[1_1_calc(50%-16px)]">
-            <Label htmlFor="benefits">Benefits</Label>
-            <TagInput
-              id="benefits"
-              placeholder="Add benefits"
-              value={form.benefits}
-              onChange={(data) => {
-                setForm((prev) => ({ ...prev, benefits: data }));
-              }}
-            />
-          </div>
-          <div className="flex flex-col space-y-1.5 col-span-2 md:col-auto w-full md:flex-[1_1_calc(50%-16px)]">
-            <Label htmlFor="benefits">Ingredients</Label>
-            <TagInput
-              id="ingredients"
-              placeholder="Add ingredients"
-              value={form.ingredients}
-              onChange={(data) => {
-                setForm((prev) => ({ ...prev, ingredients: data }));
-              }}
-            />
-          </div>
-          <div className="flex flex-col space-y-1.5 col-span-2 md:col-auto w-full md:flex-[1_1_calc(50%-16px)]">
-            <Label>Created by</Label>
-            <div className="flex items-center gap-2 border p-2 px-3 rounded-lg">
-              <Avatar className="size-9">
-                <AvatarImage src={AvatarDefault.src} alt="avatar" />
-                <AvatarFallback>
-                  <Skeleton className="size-9 rounded-full" />
-                </AvatarFallback>
-              </Avatar>
-              <div className="w-full overflow-hidden h-9">
-                <p className="truncate text-sm">{currentUser.name}</p>
-                <p className="text-xs text-muted-foreground truncate">
-                  {currentUser.email}
-                </p>
+                    }}
+                  />
+                ))}
               </div>
             </div>
           </div>
-          <div className="flex flex-col space-y-1.5 col-span-2 md:col-auto w-full md:flex-[1_1_calc(50%-16px)]">
-            <Label htmlFor="category">Category</Label>
-            <div className="flex gap-2">
-              <Select
-                onValueChange={(v) => {
-                  if (v !== "")
-                    setForm((prev) => {
-                      return { ...prev, categoryId: v };
-                    });
-                }}
-                value={form.categoryId}
-              >
-                <SelectTrigger className="focus-visible:ring-transparent focus:ring-transparent text-start h-auto">
-                  <SelectValue className="h-10" placeholder="Select tag" />
-                </SelectTrigger>
-                <SelectContent id="categories">
-                  {categories.map((t) => (
-                    <SelectItem key={t.id} value={t.id}>
-                      <div className="flex flex-col ">
-                        <p>{t.name}</p>
-                        <p className="text-xs">{t.slug}</p>
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <CategoryDialog categories={categories}>
-                <Button
-                  disabled={isPending}
-                  variant="secondary"
-                  type="button"
-                  className="h-full"
-                >
-                  <PlusIcon className="w-4 h-4" />
-                </Button>
-              </CategoryDialog>
+          <div className="col-span-2 bg-card p-4 rounded-lg">
+            <h3 className="font-semibold text-base">Product Detail</h3>
+
+            <div className="flex flex-wrap w-full gap-4 mt-4 ">
+              <div className="flex flex-col space-y-1.5 col-span-2 md:col-auto w-full md:flex-[1_1_calc(50%-16px)]">
+                <Label htmlFor="name">Name</Label>
+                <Input
+                  value={form.productName}
+                  onChange={(e) =>
+                    setForm((prev) => ({
+                      ...prev,
+                      productName: e.target.value,
+                    }))
+                  }
+                  id="name"
+                  name="name"
+                  className="focus-visible:ring-transparent "
+                  placeholder="Name of your product"
+                />
+              </div>
+              <div className="flex flex-col space-y-1.5 col-span-2 md:col-auto w-full md:flex-[1_1_calc(50%-16px)]">
+                <Label htmlFor="code">Code</Label>
+                <Input
+                  value={form.code}
+                  onChange={(e) =>
+                    setForm((prev) => ({
+                      ...prev,
+                      code: e.target.value,
+                    }))
+                  }
+                  id="code"
+                  name="code"
+                  className="focus-visible:ring-transparent "
+                  placeholder="Code"
+                />
+              </div>
+              <div className="flex flex-col space-y-1.5 col-span-2 md:col-auto w-full md:flex-[1_1_calc(50%-16px)]">
+                <Label htmlFor="slug">Slug</Label>
+                <div className="flex gap-2">
+                  <Input
+                    disabled={isLockSlug}
+                    id="slug"
+                    name="slug"
+                    className="focus-visible:ring-transparent "
+                    placeholder="Name of your project"
+                    value={form.slug}
+                    onChange={(e) =>
+                      setForm((prev) => ({
+                        ...prev,
+                        slug: e.target.value,
+                      }))
+                    }
+                  />
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    onClick={() => setIsLockSlug(!isLockSlug)}
+                  >
+                    {!isLockSlug ? (
+                      <UnlockIcon className="w-4 h-4" />
+                    ) : (
+                      <LockIcon className="w-4 h-4" />
+                    )}
+                  </Button>
+                </div>
+              </div>
+              <div className="flex flex-col space-y-1.5 col-span-2 md:col-auto w-full md:flex-[1_1_calc(50%-16px)]">
+                <Label htmlFor="status">Active</Label>
+                <div className="flex items-center justify-between h-full">
+                  <p className="text-xs font-light text-muted-foreground mt-1">
+                    Do you want product to be public?
+                  </p>
+                  <Switch
+                    id="status"
+                    checked={form.isActive}
+                    onCheckedChange={(checked) =>
+                      setForm((prev) => ({ ...prev, isActive: checked }))
+                    }
+                  />
+                </div>
+              </div>
+
+              <div className="flex flex-col space-y-1.5 col-span-2 md:col-auto w-full md:flex-[1_1_calc(50%-16px)]">
+                <Label htmlFor="benefits">Benefits</Label>
+                <TagInput
+                  id="benefits"
+                  placeholder="Add benefits"
+                  value={form.benefits}
+                  onChange={(data) => {
+                    setForm((prev) => ({ ...prev, benefits: data }));
+                  }}
+                />
+              </div>
+              <div className="flex flex-col space-y-1.5 col-span-2 md:col-auto w-full md:flex-[1_1_calc(50%-16px)]">
+                <Label htmlFor="benefits">Ingredients</Label>
+                <TagInput
+                  id="ingredients"
+                  placeholder="Add ingredients"
+                  value={form.ingredients}
+                  onChange={(data) => {
+                    setForm((prev) => ({ ...prev, ingredients: data }));
+                  }}
+                />
+              </div>
+              <div className="flex flex-col space-y-1.5 col-span-2 md:col-auto w-full md:flex-[1_1_calc(50%-16px)]">
+                <Label>Created by</Label>
+                <div className="flex items-center gap-2 border p-2 px-3 rounded-lg">
+                  <Avatar className="size-9">
+                    <AvatarImage src={AvatarDefault.src} alt="avatar" />
+                    <AvatarFallback>
+                      <Skeleton className="size-9 rounded-full" />
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="w-full overflow-hidden h-9">
+                    <p className="truncate text-sm">{currentUser.name}</p>
+                    <p className="text-xs text-muted-foreground truncate">
+                      {currentUser.email}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="flex flex-col space-y-1.5 col-span-2 md:col-auto w-full md:flex-[1_1_calc(50%-16px)]">
+                <Label htmlFor="category">Category</Label>
+                <div className="flex gap-2">
+                  <Select
+                    onValueChange={(v) => {
+                      if (v !== "")
+                        setForm((prev) => {
+                          return { ...prev, categoryId: v };
+                        });
+                    }}
+                    value={form.categoryId}
+                  >
+                    <SelectTrigger className="focus-visible:ring-transparent focus:ring-transparent text-start h-auto">
+                      <SelectValue className="h-10" placeholder="Select tag" />
+                    </SelectTrigger>
+                    <SelectContent id="categories">
+                      {categories.map((t) => (
+                        <SelectItem key={t.id} value={t.id}>
+                          <div className="flex flex-col ">
+                            <p>{t.name}</p>
+                            <p className="text-xs">{t.slug}</p>
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <CategoryDialog categories={categories}>
+                    <Button
+                      disabled={isPending}
+                      variant="secondary"
+                      type="button"
+                      className="h-full"
+                    >
+                      <PlusIcon className="w-4 h-4" />
+                    </Button>
+                  </CategoryDialog>
+                </div>
+              </div>
+              <div className="w-full">
+                <Label>Short description</Label>
+                <Textarea
+                  className="focus-visible:ring-offset-0 focus-visible:ring-transparent"
+                  value={form.description}
+                  onChange={(e) => {
+                    setForm((prev) => ({
+                      ...prev,
+                      description: e.target.value,
+                    }));
+                  }}
+                  placeholder="Type your message here."
+                />
+              </div>
             </div>
           </div>
-          <div className="w-full">
-            <Label>Short description</Label>
-            <Textarea
-              className="focus-visible:ring-offset-0 focus-visible:ring-transparent"
-              value={form.description}
-              onChange={(e) => {
-                setForm((prev) => ({ ...prev, description: e.target.value }));
-              }}
-              placeholder="Type your message here."
-            />
-          </div>
         </div>
-        <div className="flex flex-col space-y-1.5 mt-4">
-          <h3 className="font-semibold text-base mt-5">Product description</h3>
+        <div className="flex flex-col space-y-1.5 mt-4 bg-card p-4 rounded-lg">
+          <h3 className="font-semibold text-base">Product description</h3>
           <p className="text-muted-foreground text-xs">
             Recommended to provide a description of at least 500 characters long
             and addd image to help make purchasing decisions.

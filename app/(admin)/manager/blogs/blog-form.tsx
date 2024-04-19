@@ -164,9 +164,9 @@ const BlogForm1 = ({
                 onchange={(data) => {
                   setForm((prev) => ({ ...prev, thumnail: data }));
                 }}
-                className="border-dashed text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 border-2 rounded-lg flex items-center justify-center cursor-pointer relative"
+                className="aspect-square border-dashed text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 border-2 rounded-lg flex items-center justify-center cursor-pointer relative"
               >
-                <div className="flex flex-col items-center justify-center gap-1 h-[300px]">
+                <div className="flex flex-col items-center justify-center gap-1 ">
                   <ImageIcon className="size-16 justify-self-center self-center flex-shrink-0 text-gray-400 dark:text-white" />
                   <p className="text-sm font-semibold self-center">
                     Upload image
