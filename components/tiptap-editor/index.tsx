@@ -62,8 +62,8 @@ const TiptapEditor = ({
   if (!editor) return;
 
   return (
-    <div className="relative p-4 border rounded-lg overflow-hidden bg-muted">
-      <div className="flex flex-wrap gap-1 mb-2 bg-background p-2 rounded-md">
+    <div className="relative border rounded-lg overflow-hidden">
+      <div className="flex flex-wrap gap-1 border-b p-2">
         <InsertAction editor={editor} />
         <DropdownNodeActions editor={editor} />
         <GroupButtonAction editor={editor} />
@@ -76,7 +76,7 @@ const TiptapEditor = ({
         editor={editor}
         spellCheck={false}
         className={
-          "flex leading-normal bg-background p-4 border rounded-lg w-full min-h-[300px] max-h-[650px] overflow-y-scroll focus-visible:outline-0 focus-visible:ring-transparent"
+          "flex leading-normal bg-background p-4 w-full min-h-[300px] max-h-[650px] overflow-y-scroll focus-visible:outline-0 focus-visible:ring-transparent"
         }
       />
     </div>
