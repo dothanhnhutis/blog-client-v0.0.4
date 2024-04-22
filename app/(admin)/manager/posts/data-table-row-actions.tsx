@@ -16,15 +16,15 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { MoreHorizontalIcon } from "lucide-react";
 import Link from "next/link";
-import { Blog } from "@/schemas/blog";
+import { Post } from "@/schemas/post";
 import { toast } from "sonner";
 import { activeOptions } from "../users/data-table-toolbar";
 
 interface DataTableRowActionsProps {
-  row: Row<Blog>;
+  row: Row<Post>;
   getValue: Getter<unknown>;
-  column: Column<Blog, unknown>;
-  table: Table<Blog>;
+  column: Column<Post, unknown>;
+  table: Table<Post>;
 }
 
 export function DataTableRowActions({
@@ -33,7 +33,7 @@ export function DataTableRowActions({
   table,
 }: DataTableRowActionsProps) {
   const { id, createAt, updateAt, tag, author, ...other } =
-    row.original as Blog;
+    row.original as Post;
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(id);
@@ -53,7 +53,7 @@ export function DataTableRowActions({
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
         <DropdownMenuItem asChild>
-          <Link href={`/manager/blogs/${id}/edit`}>Edit</Link>
+          <Link href={`/manager/posts/${id}/edit`}>Edit</Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <Link target="_blank" href={`/bai-viet/${row.original.slug}`}>

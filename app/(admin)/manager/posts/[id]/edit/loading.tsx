@@ -1,8 +1,8 @@
 import React from "react";
 import { Loading } from "@/components/loading";
 
-const EditBlogLoading = () => {
+const EditPostLoading = () => {
   return <Loading />;
 };
 
-export default EditBlogLoading;
+export default EditPostLoading;

@@ -34,7 +34,7 @@ export function DataTableRowActions({
   getValue,
   column,
 }: DataTableRowActionsProps) {
-  const { id, email, createAt, updateAt, ...other } = row.original as User;
+  const { id, email, createdAt, updatedAt, ...other } = row.original as User;
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(id);

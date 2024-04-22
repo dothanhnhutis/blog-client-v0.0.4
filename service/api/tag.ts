@@ -28,7 +28,7 @@ export const editTag = async (
         Cookie: cookiesServer(cookies().getAll()),
       },
     });
-    revalidatePath("/manager/blogs");
+    revalidatePath("/manager/posts");
     return {
       statusCode: res.status,
       message: res.data.message,
@@ -55,7 +55,7 @@ export const createTag = async (data: { name: string; slug: string }) => {
         Cookie: cookiesServer(cookies().getAll()),
       },
     });
-    revalidatePath("/manager/blogs");
+    revalidatePath("/manager/posts");
     return {
       statusCode: res.status,
       message: res.data.message,
@@ -82,7 +82,7 @@ export const deleteTag = async (id: string) => {
         Cookie: cookiesServer(cookies().getAll()),
       },
     });
-    revalidatePath("/manager/blogs");
+    revalidatePath("/manager/posts");
     return {
       statusCode: res.status,
       message: res.data.message,

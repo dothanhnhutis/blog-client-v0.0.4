@@ -2,14 +2,14 @@ import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import slugify from "slugify";
 import { isEmpty } from "lodash";
-import GithubSlugger from "github-slugger";
 
-const slugger = new GithubSlugger();
 export const generateSlug = (name: string) => {
-  return slugify(name, { lower: true, remove: /[*+~.()'"!:@]/g, locale: "vi" });
-  // return slugger.slug(
-  //   slugify(name, { lower: true, remove: /[*+~.()'"!:@]/g, locale: "vi" })
-  // );
+  return slugify(name, {
+    lower: true,
+    trim: true,
+    remove: /[*,+~.()'"!:@]/g,
+    locale: "vi",
+  });
 };
 
 export function cn(...inputs: ClassValue[]) {

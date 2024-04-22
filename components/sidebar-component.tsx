@@ -31,10 +31,10 @@ const permissions: {
     },
     {
       icon: <ClipboardSignatureIcon className="lg:mr-2 size-6" />,
-      href: "/manager/blogs",
+      href: "/manager/posts",
       label: "Post",
       isActive: (path: string) => {
-        return /^\/manager\/blogs(\/create|.+\/edit)?$/.test(path);
+        return /^\/manager\/posts(\/create|.+\/edit)?$/.test(path);
       },
     },
     {
@@ -49,10 +49,10 @@ const permissions: {
   WRITER: [
     {
       icon: <ClipboardSignatureIcon className="lg:mr-2 size-6" />,
-      href: "/manager/blogs",
+      href: "/manager/posts",
       label: "Post",
       isActive: (path: string) => {
-        return /^\/manager\/blogs(\/create|.+\/edit)?$/.test(path);
+        return /^\/manager\/posts(\/create|.+\/edit)?$/.test(path);
       },
     },
   ],

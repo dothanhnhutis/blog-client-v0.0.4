@@ -16,6 +16,7 @@ import {
   PencilIcon,
   PlusIcon,
   SaveIcon,
+  ShuffleIcon,
   TrashIcon,
   UnlockIcon,
   XIcon,
@@ -34,8 +35,9 @@ interface ITagDialog {
 type StatusType = "view" | "edit" | "create";
 export const TagDialog = ({ children, tags }: ITagDialog) => {
   const [status, setStatus] = useState<StatusType>("view");
-  const [tagSelected, setTagSelected] = useState<Tag>(() => tags[0]);
-  const [isLockSlug, setIsLockSlug] = React.useState<boolean>(true);
+  // const [tagSelected, setTagSelected] = useState<Tag>(() => tags[0]);
+  const [tagSelectedIndex, setTagSelectedIndex] = useState<number>(0);
+
   const [searchInput, setSearchInput] = useState<string>("");
   const [form, setForm] = useState<MutationTagPayload>(
     pick(tags[0], ["name", "slug"])
@@ -48,8 +50,8 @@ export const TagDialog = ({ children, tags }: ITagDialog) => {
   const handleSubmit = () => {
     startTransistion(() => {
       if (status == "edit") {
-        if (!isEqual(form, pick(tagSelected, ["name", "slug"])))
-          editTag(tagSelected.id, form)
+        if (!isEqual(form, pick(tags[tagSelectedIndex], ["name", "slug"])))
+          editTag(tags[tagSelectedIndex].id, form)
             .then((data) => {
               if (data.statusCode == 200) {
                 toast.success(data.message);
@@ -69,7 +71,7 @@ export const TagDialog = ({ children, tags }: ITagDialog) => {
           })
           .catch((error) => console.log(error));
       } else {
-        deleteTag(tagSelected.id)
+        deleteTag(tags[tagSelectedIndex].id)
           .then((data) => {
             if (data.statusCode == 200) {
               toast.success(data.message);
@@ -82,10 +84,6 @@ export const TagDialog = ({ children, tags }: ITagDialog) => {
       setStatus("view");
     });
   };
-
-  React.useEffect(() => {
-    setForm((prev) => ({ ...prev, slug: generateSlug(prev.name) }));
-  }, [form.name]);
 
   return (
     <Dialog>
@@ -124,17 +122,17 @@ export const TagDialog = ({ children, tags }: ITagDialog) => {
                       tag.name.includes(searchInput) ||
                       tag.slug.includes(searchInput)
                   )
-                  .map((tag) => (
+                  .map((tag, index) => (
                     <div
                       onClick={() => {
-                        setTagSelected(tag);
+                        setTagSelectedIndex(index);
                         status == "edit" &&
                           setForm({ name: tag.name, slug: tag.slug });
                       }}
                       key={tag.id}
                       className={cn(
                         "p-2 rounded-lg",
-                        tag.id == tagSelected?.id ? "bg-muted" : "border"
+                        index == tagSelectedIndex ? "bg-muted" : "border"
                       )}
                     >
                       <p className="line-clamp-2">{tag.name}</p>
@@ -174,7 +172,8 @@ export const TagDialog = ({ children, tags }: ITagDialog) => {
                           .filter(
                             (tag) =>
                               status == "create" ||
-                              (status == "edit" && tag.id != tagSelected.id)
+                              (status == "edit" &&
+                                tag.id != tags[tagSelectedIndex].id)
                           )
                           .find((tag) => tag.slug == form.slug)
                           ? "opacity-50"
@@ -186,7 +185,8 @@ export const TagDialog = ({ children, tags }: ITagDialog) => {
                             .filter(
                               (tag) =>
                                 status == "create" ||
-                                (status == "edit" && tag.id != tagSelected.id)
+                                (status == "edit" &&
+                                  tag.id != tags[tagSelectedIndex].id)
                             )
                             .find((tag) => tag.slug == form.slug)
                         ) {
@@ -197,19 +197,21 @@ export const TagDialog = ({ children, tags }: ITagDialog) => {
                     />
                   )
                 ) : (
-                  <PencilIcon
-                    className="size-4"
-                    onClick={() => {
-                      setForm({
-                        name: tagSelected.name,
-                        slug: tagSelected.slug,
-                      });
-                      setStatus("edit");
-                    }}
-                  />
+                  tags[tagSelectedIndex] && (
+                    <PencilIcon
+                      className="size-4"
+                      onClick={() => {
+                        setForm({
+                          name: tags[tagSelectedIndex].name,
+                          slug: tags[tagSelectedIndex].slug,
+                        });
+                        setStatus("edit");
+                      }}
+                    />
+                  )
                 )}
 
-                {tagSelected?._count.blog == 0 &&
+                {tags[tagSelectedIndex]?._count.post == 0 &&
                   status == "view" &&
                   (isPending ? (
                     <Loader2Icon className={"h-4 w-4 animate-spin"} />
@@ -237,7 +239,7 @@ export const TagDialog = ({ children, tags }: ITagDialog) => {
                 <div>
                   <Label className="text-sx font-normal">ID</Label>
                   <p className="font-medium truncate">
-                    {tagSelected?.id ?? "N/A"}
+                    {tags[tagSelectedIndex]?.id ?? "N/A"}
                   </p>
                 </div>
               )}
@@ -255,7 +257,7 @@ export const TagDialog = ({ children, tags }: ITagDialog) => {
                   />
                 ) : (
                   <p className="font-medium truncate">
-                    {tagSelected?.name ?? "N/A"}
+                    {tags[tagSelectedIndex]?.name ?? "N/A"}
                   </p>
                 )}
               </div>
@@ -264,7 +266,7 @@ export const TagDialog = ({ children, tags }: ITagDialog) => {
                 {status != "view" ? (
                   <div className="flex gap-2">
                     <Input
-                      disabled={isLockSlug || isPending}
+                      disabled={isPending}
                       id="slug"
                       name="slug"
                       className={cn(
@@ -274,7 +276,8 @@ export const TagDialog = ({ children, tags }: ITagDialog) => {
                           .filter(
                             (tag) =>
                               status == "create" ||
-                              (status == "edit" && tag.id != tagSelected.id)
+                              (status == "edit" &&
+                                tag.id != tags[tagSelectedIndex].id)
                           )
                           .find((tag) => tag.slug == form.slug)
                           ? "border-red-500"
@@ -288,18 +291,19 @@ export const TagDialog = ({ children, tags }: ITagDialog) => {
                       disabled={isPending}
                       type="button"
                       variant="secondary"
-                      onClick={() => setIsLockSlug(!isLockSlug)}
+                      onClick={() =>
+                        setForm((prev) => ({
+                          ...prev,
+                          slug: generateSlug(prev.name),
+                        }))
+                      }
                     >
-                      {!isLockSlug ? (
-                        <UnlockIcon className="w-4 h-4" />
-                      ) : (
-                        <LockIcon className="w-4 h-4" />
-                      )}
+                      <ShuffleIcon className="w-4 h-4" />
                     </Button>
                   </div>
                 ) : (
                   <p className="font-medium truncate">
-                    {tagSelected?.slug ?? "N/A"}
+                    {tags[tagSelectedIndex]?.slug ?? "N/A"}
                   </p>
                 )}
               </div>
@@ -307,7 +311,7 @@ export const TagDialog = ({ children, tags }: ITagDialog) => {
                 <div>
                   <Label className="text-sx font-normal">Amount</Label>
                   <p className="font-medium truncate">
-                    {tagSelected?._count.blog ?? "N/A"}
+                    {tags[tagSelectedIndex]?._count.post ?? "N/A"}
                   </p>
                 </div>
               )}

@@ -20,30 +20,29 @@ import {
 } from "@tanstack/react-table";
 import React from "react";
 import { DataTableToolbar } from "./data-table-toolbar";
-import { Blog } from "@/schemas/blog";
+import { Post } from "@/schemas/post";
 import { columns } from "./columns";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Tag } from "@/schemas/tag";
 import { User } from "@/schemas/user";
-// import { editBlog } from "@/actions/blog";
 import { toast } from "sonner";
 import { DataTablePagination } from "@/components/data-table-pagination";
-import { editBlog } from "@/service/api/blog";
+import { editPost } from "@/service/api/post";
 
 interface DataTableProps {
   currentUser: User;
-  blogs: Blog[];
+  posts: Post[];
   authors: User[];
   tags: Tag[];
 }
 
-function DataTable({ blogs, authors, tags, currentUser }: DataTableProps) {
+function DataTable({ posts, authors, tags, currentUser }: DataTableProps) {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
 
   const table = useReactTable({
-    data: blogs,
+    data: posts,
     columns,
     state: {
       columnFilters,
@@ -54,7 +53,7 @@ function DataTable({ blogs, authors, tags, currentUser }: DataTableProps) {
         columnId: string,
         value: { id: string; data: any }
       ) => {
-        editBlog(value.id, value.data)
+        editPost(value.id, value.data)
           .then((data) => {
             if (data.statusCode == 200) {
               toast.success(data.message);

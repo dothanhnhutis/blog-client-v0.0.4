@@ -1,21 +1,21 @@
 "use server";
 import { generateQuery } from "@/lib/utils";
-import { Blog, BlogFormType, BlogQuery } from "@/schemas/blog";
+import { Post, PostFormPayload, PostQuery } from "@/schemas/post";
 import { revalidatePath } from "next/cache";
 import { FetchHttpError, http } from "../http";
 import { cookiesServer } from "../cookieSession";
 import { cookies } from "next/headers";
 
-type QueryBlogType = {
+type QueryPostType = {
   tag?: string;
   page?: string;
   slug?: string;
 };
 
-export const queryBlog = async (props: QueryBlogType) => {
+export const queryPost = async (props: QueryPostType) => {
   try {
-    const { data } = await http.get<BlogQuery>(
-      "/blogs/query" + generateQuery(props),
+    const { data } = await http.get<PostQuery>(
+      "/posts/query" + generateQuery(props),
       {
         headers: {
           Cookie: cookiesServer(cookies().getAll()),
@@ -26,7 +26,7 @@ export const queryBlog = async (props: QueryBlogType) => {
   } catch (error: any) {
     console.log(error);
     return {
-      blogs: [],
+      posts: [],
       metadata: {
         hasNextPage: false,
         totalPage: 0,
@@ -35,9 +35,9 @@ export const queryBlog = async (props: QueryBlogType) => {
   }
 };
 
-export const getBlogById = async (id: string) => {
+export const getPostById = async (id: string) => {
   try {
-    const { data } = await http.get<Blog>("/blogs/" + id, {
+    const { data } = await http.get<Post>("/posts/" + id, {
       headers: {
         Cookie: cookiesServer(cookies().getAll()),
       },
@@ -49,9 +49,9 @@ export const getBlogById = async (id: string) => {
   }
 };
 
-export const getAllBlog = async () => {
+export const getAllPost = async () => {
   try {
-    const { data } = await http.get<Blog[]>("/blogs", {
+    const { data } = await http.get<Post[]>("/posts", {
       headers: {
         Cookie: cookiesServer(cookies().getAll()),
       },
@@ -63,14 +63,14 @@ export const getAllBlog = async () => {
   }
 };
 
-export const editBlog = async (id: string, data: Partial<BlogFormType>) => {
+export const editPost = async (id: string, data: Partial<PostFormPayload>) => {
   try {
-    const res = await http.patch<{ message: string }>("/blogs/" + id, data, {
+    const res = await http.patch<{ message: string }>("/posts/" + id, data, {
       headers: {
         Cookie: cookiesServer(cookies().getAll()),
       },
     });
-    revalidatePath("/manager/blogs");
+    revalidatePath("/manager/posts");
     return {
       statusCode: res.status,
       message: res.data.message,
@@ -91,14 +91,14 @@ export const editBlog = async (id: string, data: Partial<BlogFormType>) => {
   }
 };
 
-export const createBlog = async (data: BlogFormType) => {
+export const createPost = async (data: PostFormPayload) => {
   try {
-    const res = await http.post<{ message: string }>("/blogs", data, {
+    const res = await http.post<{ message: string }>("/posts", data, {
       headers: {
         Cookie: cookiesServer(cookies().getAll()),
       },
     });
-    revalidatePath("/manager/blogs");
+    revalidatePath("/manager/posts");
     return {
       statusCode: res.status,
       message: res.data.message,

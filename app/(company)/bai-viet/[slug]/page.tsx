@@ -7,28 +7,28 @@ import {
   UserIcon,
 } from "lucide-react";
 import { notFound } from "next/navigation";
-import { format } from "date-fns";
-import { getBlogById } from "@/service/api/blog";
+import { format, isPast } from "date-fns";
+import { getPostById } from "@/service/api/post";
 
-type BlogDetailPageProps = {
+type PostDetailPageProps = {
   params: { slug: string };
 };
-export async function generateMetadata({ params }: BlogDetailPageProps) {
+export async function generateMetadata({ params }: PostDetailPageProps) {
   try {
-    const blog = await getBlogById(params.slug);
-    if (!blog || !blog.isActive)
+    const post = await getPostById(params.slug);
+    if (!post || !post.isActive || !isPast(post.publishAt))
       return {
         title: "Not Found",
         description: "The page you are looking for does not exist.",
       };
     return {
-      title: blog.title,
-      description: blog.contentText,
+      title: post.title,
+      description: post.contentText,
       alternates: {
-        canonical: `/bai-viet/${blog.slug}`,
+        canonical: `/bai-viet/${post.slug}`,
         // languages: {
-        //   "en-US": `/en-US/bai-viet/${blog.slug}`,
-        //   "de-DE": `/de-DE/bai-viet/${blog.slug}`,
+        //   "en-US": `/en-US/bai-viet/${post.slug}`,
+        //   "de-DE": `/de-DE/bai-viet/${post.slug}`,
         // },
       },
     };
@@ -40,9 +40,9 @@ export async function generateMetadata({ params }: BlogDetailPageProps) {
   }
 }
 
-const BlogDetailPage = async ({ params }: BlogDetailPageProps) => {
-  const blog = await getBlogById(params.slug);
-  if (!blog || !blog.isActive) return notFound();
+const PostDetailPage = async ({ params }: PostDetailPageProps) => {
+  const post = await getPostById(params.slug);
+  if (!post || !post.isActive || !isPast(post.publishAt)) return notFound();
   return (
     <div className="mx-auto xl:max-w-screen-xl px-2">
       <nav className="py-5">
@@ -62,34 +62,27 @@ const BlogDetailPage = async ({ params }: BlogDetailPageProps) => {
           >
             Bài viết
           </Link>
-          {/* <ChevronRightIcon className="w-4 h-4 inline mx-1" />
-          <Link
-            href={`/bai-viet/${blogs[0].tag.slug}`}
-            prefetch
-            className="inline hover:text-primary font-medium"
-          >
-            {blogs[0].tag.name}
-          </Link> */}
+
           <ChevronRightIcon className="w-4 h-4 inline mx-1" />
-          <span className="font-normal">{blog.title}</span>
+          <span className="font-normal">{post.title}</span>
         </p>
       </nav>
-      <h1 className="text-primary font-bold text-3xl mb-4">{blog.title}</h1>
+      <h1 className="text-primary font-bold text-3xl mb-4">{post.title}</h1>
       <div className="flex justify-between items-center border-t border-b border-dashed py-2 mb-3">
         <div className="flex items-center gap-2">
           <CalendarIcon className="w-4 h-4" />
           <span className="text-sm">
-            {format(new Date(blog.publishAt), "dd/MM/yyyy")}
+            {format(new Date(post.publishAt), "dd/MM/yyyy")}
           </span>
           <UserIcon className="w-5 h-5" />
-          <span className="text-sm">{blog.author.name}</span>
+          <span className="text-sm">{post.author.name}</span>
         </div>
         <div className="flex items-center gap-2">
           <EyeIcon className="w-4 h-4" />
           <span className="text-sm">10000</span>
         </div>
       </div>
-      <div dangerouslySetInnerHTML={{ __html: blog.contentHTML }} />
+      <div dangerouslySetInnerHTML={{ __html: post.contentHTML }} />
 
       <p className="text-base text-black-100 mb-3 mt-32">
         <strong className="font-bold">
@@ -107,4 +100,4 @@ const BlogDetailPage = async ({ params }: BlogDetailPageProps) => {
   );
 };
 
-export default BlogDetailPage;
+export default PostDetailPage;

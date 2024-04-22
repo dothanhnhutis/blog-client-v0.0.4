@@ -40,7 +40,7 @@ export const Header = () => {
                   href="/"
                   className="transition-colors hover:text-foreground/80 text-foreground/60"
                 >
-                  Blog
+                  Post
                 </Link>
               </li>
               <li>
@@ -69,7 +69,7 @@ export const Header = () => {
             href="/"
             className="transition-colors hover:text-foreground/80 text-foreground/60"
           >
-            Blog
+            Post
           </Link>
 
           <Link

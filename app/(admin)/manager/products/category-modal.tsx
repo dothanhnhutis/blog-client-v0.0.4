@@ -16,6 +16,7 @@ import {
   PencilIcon,
   PlusIcon,
   SaveIcon,
+  ShuffleIcon,
   TrashIcon,
   UnlockIcon,
   XIcon,
@@ -41,7 +42,6 @@ export const CategoryDialog = ({ children, categories }: ICategoryDialog) => {
   const [categorySelected, setCategorySelected] = useState<Category>(
     () => categories[0]
   );
-  const [isLockSlug, setIsLockSlug] = React.useState<boolean>(true);
   const [searchInput, setSearchInput] = useState<string>("");
   const [form, setForm] = useState<Pick<Category, "name" | "slug">>(
     pick(categories[0], ["name", "slug"])
@@ -68,7 +68,7 @@ export const CategoryDialog = ({ children, categories }: ICategoryDialog) => {
       } else if (status == "create") {
         createCategory(form)
           .then((data) => {
-            if (data.statusCode == 200) {
+            if (data.statusCode == 201) {
               toast.success(data.message);
             } else {
               toast.error(data.message);
@@ -89,10 +89,6 @@ export const CategoryDialog = ({ children, categories }: ICategoryDialog) => {
       setStatus("view");
     });
   };
-
-  React.useEffect(() => {
-    setForm((prev) => ({ ...prev, slug: generateSlug(prev.name) }));
-  }, [form.name]);
 
   return (
     <Dialog>
@@ -188,7 +184,7 @@ export const CategoryDialog = ({ children, categories }: ICategoryDialog) => {
                           )
                           .find((category) => category.slug == form.slug)
                           ? "opacity-50"
-                          : ""
+                          : "cursor-pointer"
                       )}
                       onClick={() => {
                         if (
@@ -275,7 +271,7 @@ export const CategoryDialog = ({ children, categories }: ICategoryDialog) => {
                 {status != "view" ? (
                   <div className="flex gap-2">
                     <Input
-                      disabled={isLockSlug || isPending}
+                      disabled={isPending}
                       id="slug"
                       name="slug"
                       className={cn(
@@ -300,13 +296,14 @@ export const CategoryDialog = ({ children, categories }: ICategoryDialog) => {
                       disabled={isPending}
                       type="button"
                       variant="secondary"
-                      onClick={() => setIsLockSlug(!isLockSlug)}
+                      onClick={() =>
+                        setForm((prev) => ({
+                          ...prev,
+                          slug: generateSlug(prev.name),
+                        }))
+                      }
                     >
-                      {!isLockSlug ? (
-                        <UnlockIcon className="w-4 h-4" />
-                      ) : (
-                        <LockIcon className="w-4 h-4" />
-                      )}
+                      <ShuffleIcon className="size-4" />
                     </Button>
                   </div>
                 ) : (

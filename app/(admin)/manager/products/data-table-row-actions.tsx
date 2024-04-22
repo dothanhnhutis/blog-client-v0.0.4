@@ -34,7 +34,7 @@ export function DataTableRowActions({
   column,
   table,
 }: DataTableRowActionsProps) {
-  const { id, createAt, updateAt, ...other } = row.original as Product;
+  const { id, createdAt, updatedAt, ...other } = row.original as Product;
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(id);

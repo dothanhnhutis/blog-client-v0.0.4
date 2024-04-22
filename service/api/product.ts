@@ -1,6 +1,6 @@
 "use server";
 import { generateQuery } from "@/lib/utils";
-import { Product, ProductFormType, ProductQuery } from "@/schemas/product";
+import { Product, ProductFormPayload, ProductQuery } from "@/schemas/product";
 import { revalidatePath } from "next/cache";
 import { FetchHttpError, http } from "../http";
 import { cookiesServer } from "../cookieSession";
@@ -60,19 +60,18 @@ export const queryProduct = async (props: QueryProductType) => {
   }
 };
 
-export const createProduct = async (data: ProductFormType) => {
+export const createProduct = async (data: ProductFormPayload) => {
   try {
-    const { data: dataRes } = await http.post<{ message: string }>(
-      "/products",
-      data,
-      {
-        headers: {
-          Cookie: cookiesServer(cookies().getAll()),
-        },
-      }
-    );
+    const res = await http.post<{ message: string }>("/products", data, {
+      headers: {
+        Cookie: cookiesServer(cookies().getAll()),
+      },
+    });
     revalidatePath("/manager/products");
-    return { success: dataRes.message };
+    return {
+      statusCode: res.status,
+      message: res.data.message,
+    };
   } catch (error) {
     if (error instanceof FetchHttpError) {
       return {
@@ -88,19 +87,18 @@ export const createProduct = async (data: ProductFormType) => {
   }
 };
 
-export const editProduct = async (id: string, data: ProductFormType) => {
+export const editProduct = async (id: string, data: ProductFormPayload) => {
   try {
-    const { data: dataRes } = await http.patch<{ message: string }>(
-      "/products/" + id,
-      data,
-      {
-        headers: {
-          Cookie: cookiesServer(cookies().getAll()),
-        },
-      }
-    );
+    const res = await http.patch<{ message: string }>("/products/" + id, data, {
+      headers: {
+        Cookie: cookiesServer(cookies().getAll()),
+      },
+    });
     revalidatePath("/manager/products");
-    return { success: dataRes.message };
+    return {
+      statusCode: res.status,
+      message: res.data.message,
+    };
   } catch (error) {
     if (error instanceof FetchHttpError) {
       return {

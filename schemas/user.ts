@@ -63,8 +63,8 @@ export type Role = CreateUserType["role"];
 export type User = Omit<CreateUserType, "password"> &
   Required<EditUserType> & {
     id: string;
-    createAt: string;
-    updateAt: string;
+    createdAt: string;
+    updatedAt: string;
   };
 
 export type EditProfile = {

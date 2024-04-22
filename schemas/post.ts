@@ -1,23 +1,23 @@
 import { z } from "zod";
 const base64Regex =
   /^data:image\/(?:png|gif|png|jpg|jpeg|bmp|webp)(?:;charset=utf-8)?;base64,(?:[A-Za-z0-9]|[+/])+={0,2}/g;
-export const blogFormSchema = z.object({
+export const postFormSchema = z.object({
   title: z
     .string({
       required_error: "title field is required",
       invalid_type_error: "title field must be string",
     })
     .min(1, "title field cann't empty"),
-  thumnail: z
+  image: z
     .string({
-      required_error: "thumnail field is required",
-      invalid_type_error: "thumnail field must be url or image base64",
+      required_error: "image field is required",
+      invalid_type_error: "image field must be url or image base64",
     })
     .superRefine((value, ctx) => {
       if (value.length == 0) {
         return ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: "thumnail not empty",
+          message: "image not empty",
         });
       }
 
@@ -27,7 +27,7 @@ export const blogFormSchema = z.object({
       )
         return ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: "thumnail field must be url or image base64",
+          message: "image field must be url or image base64",
         });
     }),
   slug: z
@@ -64,9 +64,9 @@ export const blogFormSchema = z.object({
   publishAt: z.string().datetime("invalid date"),
 });
 
-export type BlogFormType = z.infer<typeof blogFormSchema>;
+export type PostFormPayload = z.infer<typeof postFormSchema>;
 
-export type Blog = BlogFormType & {
+export type Post = PostFormPayload & {
   id: string;
   tag: {
     slug: string;
@@ -76,15 +76,15 @@ export type Blog = BlogFormType & {
     name: string;
     avatarUrl: string | null;
   };
-  createAt: Date;
-  updateAt: Date;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
-export type BlogQuery = {
-  blogs: {
+export type PostQuery = {
+  posts: {
     id: string;
     slug: string;
-    thumnail: string;
+    image: string;
     title: string;
     shortContent: string;
     tag: {

@@ -56,7 +56,7 @@ export function DataTableViewOptions<TData>({
       </DropdownMenu>
       <Link
         className="items-center justify-center whitespace-nowrap text-sm font-medium transition-colors focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-accent hover:text-accent-foreground rounded-md px-3 ml-auto h-8 flex"
-        href="/manager/blogs/create"
+        href="/manager/posts/create"
       >
         <PlusIcon className="w-4 h-4" />
       </Link>

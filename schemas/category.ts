@@ -20,8 +20,8 @@ export type MutationCategoryResponse = {
   message: string;
   category: MutationCategoryPayload & {
     id: string;
-    createAt: Date;
-    updateAt: Date;
+    createdAt: Date;
+    updatedAt: Date;
   };
 };
 

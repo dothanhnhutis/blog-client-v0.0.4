@@ -5,11 +5,11 @@ import { DataTableRowActions } from "./data-table-row-actions";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import AvatarDefault from "@/images/avatars/user-1.jpg";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Blog } from "@/schemas/blog";
+import { Post } from "@/schemas/post";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { format } from "date-fns";
 import { DataTableColumnHeader } from "@/components/data-table-header";
-const columnHelper = createColumnHelper<Blog>();
+const columnHelper = createColumnHelper<Post>();
 
 export const columns = [
   // columnHelper.accessor("thumnail", {
@@ -56,7 +56,7 @@ export const columns = [
       <DataTableColumnHeader column={column} title="Tag" />
     ),
     cell: ({ row }) => {
-      const tag = row.original.tag as Blog["tag"];
+      const tag = row.original.tag as Post["tag"];
       return (
         <div className="flex space-x-2">
           <span className="max-w-[500px] truncate font-medium">{tag.name}</span>
@@ -74,7 +74,7 @@ export const columns = [
       <DataTableColumnHeader column={column} title="Author" />
     ),
     cell: ({ row }) => {
-      const author = row.original.author as Blog["author"];
+      const author = row.original.author as Post["author"];
       return (
         <div className="flex items-center gap-2 capitalize">
           <Avatar>

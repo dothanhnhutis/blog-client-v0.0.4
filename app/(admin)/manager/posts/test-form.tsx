@@ -1,21 +1,16 @@
 "use client";
+
 import React, { useTransition } from "react";
 import Image from "next/image";
-import { useEditor } from "@tiptap/react";
-import { useRouter } from "next/navigation";
-import { addHours, isEqual, isPast } from "date-fns";
 import {
+  EditIcon,
+  EyeIcon,
   ImageIcon,
   Loader2Icon,
-  LockIcon,
   PlusIcon,
   ShuffleIcon,
-  UnlockIcon,
-  XIcon,
+  TrashIcon,
 } from "lucide-react";
-
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -24,67 +19,65 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { TagDialog } from "./tag-dialog";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Switch } from "@/components/ui/switch";
 import AvatarDefault from "@/images/avatars/user-1.jpg";
+import DatePicker, { getNow } from "@/components/date-picker";
 import { User } from "@/schemas/user";
 import { Tag } from "@/schemas/tag";
-import { Blog, BlogFormType } from "@/schemas/blog";
-import DatePicker, { getNow } from "@/components/date-picker";
-import { cn, generateSlug } from "@/lib/utils";
-import { UploadPicture } from "@/components/upload-picture";
+import { Switch } from "@/components/ui/switch";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { TagDialog } from "./tag-dialog";
 import TiptapEditor from "@/components/tiptap-editor";
+import { useRouter } from "next/navigation";
+import { addHours, isPast } from "date-fns";
+import { PostFormPayload } from "@/schemas/post";
+import { UploadImage } from "@/components/upload-image";
+import { cn, generateSlug } from "@/lib/utils";
 import { toast } from "sonner";
-import { createBlog, editBlog } from "@/service/api/blog";
-import { UploadImageSingle } from "@/components/upload-image";
+import { createPost, editPost } from "@/service/api/post";
+import { isEqual, omit } from "lodash";
 
-type BlogFormProps = {
+type PostFormProps = {
   currentUser: User;
-  type: "create" | "edit";
   authors: User[];
   tags: Tag[];
-  blog?: Blog;
+  post?: PostFormPayload & { id: string };
 };
-
-const BlogForm1 = ({
-  type,
-  authors,
-  tags,
+export const NewPostForm = ({
   currentUser,
-  blog,
-}: BlogFormProps) => {
-  if (type == "edit" && !blog) throw new Error("Blog is required");
+  tags,
+  authors,
+  post,
+}: PostFormProps) => {
   const router = useRouter();
 
-  const [form, setForm] = React.useState<BlogFormType>(() => {
-    if (type == "edit" && blog) {
-      const { id, createAt, updateAt, tag, author, ...other } = blog;
-      return other;
-    }
-    return {
-      title: "",
-      thumnail: "",
-      slug: "",
-      contentJson: JSON.stringify({
-        type: "doc",
-        content: [
-          {
-            type: "paragraph",
-            attrs: {
-              textAlign: "left",
-            },
-          },
-        ],
-      }),
-      contentHTML: "<p></p>",
-      contentText: "",
-      tagId: tags.length > 0 ? tags[0].id : "",
-      authorId: currentUser.id,
-      isActive: true,
-      publishAt: addHours(getNow(), 3).toISOString(),
-    };
+  const [form, setForm] = React.useState<PostFormPayload>(() => {
+    return post
+      ? omit(post, ["id"])
+      : {
+          title: "",
+          image: "",
+          slug: "",
+          contentJson: JSON.stringify({
+            type: "doc",
+            content: [
+              {
+                type: "paragraph",
+                attrs: {
+                  textAlign: "left",
+                },
+              },
+            ],
+          }),
+          contentHTML: "<p></p>",
+          contentText: "",
+          tagId: tags.length > 0 ? tags[0].id : "",
+          authorId: currentUser.id,
+          isActive: true,
+          publishAt: addHours(getNow(), 3).toISOString(),
+        };
   });
 
   const [isPending, startTransistion] = useTransition();
@@ -92,15 +85,12 @@ const BlogForm1 = ({
   const handleSubmitForm = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     startTransistion(async () => {
-      if (type === "create") {
-        if (isPast(new Date(form.publishAt))) {
-          toast.error("Publish At should be feature.");
-        }
-        createBlog(form)
+      if (post) {
+        editPost(post.id, form)
           .then((data) => {
-            if (data.statusCode == 201) {
+            if (data.statusCode == 200) {
               toast.success(data.message);
-              router.push("/manager/blogs");
+              router.push("/manager/posts");
             } else {
               toast.error(data.message);
             }
@@ -109,11 +99,14 @@ const BlogForm1 = ({
             console.log(error);
           });
       } else {
-        editBlog(blog!.id, form)
+        if (isPast(new Date(form.publishAt))) {
+          toast.error("Publish At should be feature.");
+        }
+        createPost(form)
           .then((data) => {
-            if (data.statusCode == 200) {
+            if (data.statusCode == 201) {
               toast.success(data.message);
-              router.push("/manager/blogs");
+              router.push("/manager/posts");
             } else {
               toast.error(data.message);
             }
@@ -124,56 +117,50 @@ const BlogForm1 = ({
       }
     });
   };
-
   return (
-    <form onSubmit={handleSubmitForm}>
-      <div className="grid sm:grid-cols-3 gap-4 ">
-        <div className="sm:col-span-1 sm:order-none">
-          <div className="flex flex-col space-y-1.5 border rounded-lg p-6 bg-card">
-            <h3 className="text-2xl font-semibold leading-none tracking-tight mb-4">
-              Thumnail
-            </h3>
-
-            {form.thumnail ? (
-              <div className="rounded-lg cursor-pointer relative">
+    <form
+      onSubmit={handleSubmitForm}
+      className="bg-card shadow rounded-lg p-4 overflow-hidden"
+    >
+      <div className="grid grid-cols-1 sm:grid-cols-[minmax(0,_.75fr)_minmax(0,_1fr)] gap-4 ">
+        <div className="col-span-2 lg:col-span-1">
+          <div className="flex flex-col space-y-1.5">
+            <Label htmlFor="title">Featured Image</Label>
+            {form.image ? (
+              <div className="relative group border rounded-md overflow-hidden flex-shrink-0">
                 <Image
-                  priority
-                  alt="Product image"
-                  className="aspect-[3/2] w-full rounded-md object-contain"
-                  height="300"
-                  src={form.thumnail}
-                  width="300"
+                  className="object-contain aspect-[4/3]"
+                  alt="Featured Image"
+                  width={800}
+                  height={600}
+                  src={form.image}
                 />
-                <Button
-                  disabled={isPending}
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setForm((prev) => ({ ...prev, thumnail: "" }));
-                  }}
-                  variant="ghost"
-                  className="absolute top-0 right-0 p-1 h-auto bg-transparent "
-                >
-                  <XIcon className="w-4 h-4" />
-                </Button>
+                <div className="bg-black/50 absolute top-0 left-0 right-0 bottom-0 z-10 rounded-md invisible group-hover:visible">
+                  <div className="flex items-center justify-center h-full gap-1 text-white">
+                    <EyeIcon className="w-4 h-4" />
+                    <EditIcon className="w-4 h-4" />
+                    <TrashIcon
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setForm((prev) => ({ ...prev, image: "" }));
+                      }}
+                      className="w-4 h-4 cursor-pointer flex-shrink-0 "
+                    />
+                  </div>
+                </div>
               </div>
             ) : (
-              <UploadImageSingle
-                aspectRatios={3 / 2}
-                title="Thumnail"
-                onchange={(data) => {
-                  setForm((prev) => ({ ...prev, thumnail: data }));
+              <UploadImage
+                onchange={(images) => {
+                  setForm((prev) => ({ ...prev, image: images[0] }));
                 }}
-                className="aspect-square border-dashed text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 border-2 rounded-lg flex items-center justify-center cursor-pointer relative"
               >
-                <div className="flex flex-col items-center justify-center gap-1 ">
-                  <ImageIcon className="size-16 justify-self-center self-center flex-shrink-0 text-gray-400 dark:text-white" />
-                  <p className="text-sm font-semibold self-center">
-                    Upload image
-                  </p>
-                  <ul className="list-disc text-xs text-[#00000059] dark:text-white px-4">
+                <div className="flex flex-col justify-center items-center text-center p-4 gap-2 size-full border-dashed border rounded-md cursor-pointer hover:border-primary aspect-[4/3]">
+                  <ImageIcon className="size-6 flex-shrink-0 text-muted-foreground" />
+                  <p className="text-xs font-medium">Upload image</p>
+                  <ul className="list-disc text-start text-xs text-muted-foreground px-4 ml-4">
                     <li>
-                      <p>Dimensions: 600 x 400 px</p>
+                      <p>Dimensions: 800 x 600px</p>
                     </li>
                     <li>
                       <p>Maximum file size: 5MB</p>
@@ -183,18 +170,12 @@ const BlogForm1 = ({
                     </li>
                   </ul>
                 </div>
-              </UploadImageSingle>
+              </UploadImage>
             )}
           </div>
         </div>
-
-        <div className="flex flex-col gap-4 sm:col-span-2 border rounded-lg p-6 bg-card">
-          <div className="flex flex-col space-y-1.5 ">
-            <h3 className="text-2xl font-semibold leading-none tracking-tight">
-              Blog Details
-            </h3>
-          </div>
-          <div className="flex flex-col space-y-1.5 ">
+        <div className="col-span-2 lg:col-span-1 flex gap-4 flex-col">
+          <div className="flex flex-col space-y-1.5">
             <Label htmlFor="title">Title</Label>
             <Input
               disabled={isPending}
@@ -239,14 +220,13 @@ const BlogForm1 = ({
                   }))
                 }
               >
-                <ShuffleIcon className="w-4 h-4" />
+                <ShuffleIcon className="size-4" />
               </Button>
             </div>
           </div>
-
           <div className="flex flex-col space-y-1.5">
             <Label htmlFor="tag">Tag</Label>
-            <div className="flex gap-2">
+            <div className="flex gap-2 items-center">
               <Select
                 disabled={isPending}
                 onValueChange={(v) => {
@@ -280,7 +260,7 @@ const BlogForm1 = ({
                     type="button"
                     className="h-full"
                   >
-                    <PlusIcon className="w-4 h-4" />
+                    <PlusIcon className="size-4" />
                   </Button>
                 </TagDialog>
               )}
@@ -289,9 +269,9 @@ const BlogForm1 = ({
           <div className="flex flex-col space-y-1.5">
             <Label>Author</Label>
 
-            {["ADMIN", "MANAGER"].includes(currentUser.role) ? (
+            {["ADMIN", "MANAGER"].includes(currentUser!.role!) ? (
               <Select
-                //   disabled={isPending}
+                disabled={isPending}
                 onValueChange={(v) => {
                   if (v !== "")
                     setForm((prev) => {
@@ -339,67 +319,60 @@ const BlogForm1 = ({
                   <Skeleton className="h-12 w-12 rounded-full" />
                 </Avatar>
                 <div className="w-full overflow-hidden h-10">
-                  <p className="truncate">{currentUser.name}</p>
+                  <p className="truncate">{currentUser?.name}</p>
                   <p className="text-xs text-muted-foreground truncate">
-                    {currentUser.email}
+                    {currentUser?.email}
                   </p>
                 </div>
               </div>
             )}
           </div>
-          <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
-            <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="status">Active</Label>
-              <div className="flex items-center justify-between space-y-1.5">
-                <p className="text-sm font-light text-card-foreground mt-1">
-                  Do you want blog to be public?
-                </p>
-                <Switch
-                  disabled={isPending}
-                  id="status"
-                  checked={form.isActive}
-                  onCheckedChange={(checked) =>
-                    setForm((prev) => ({ ...prev, isActive: checked }))
-                  }
-                />
-              </div>
-            </div>
-            <div className="flex flex-col space-y-1.5">
-              <Label>Publish At</Label>
-              <DatePicker
-                disabled={
-                  (type == "edit" &&
-                    blog &&
-                    isPast(new Date(blog.publishAt))) ||
-                  isPending
+          <div className="flex flex-col space-y-1.5">
+            <Label htmlFor="status">Active</Label>
+            <div className="flex items-center justify-between space-y-1.5">
+              <p className="text-sm font-light text-card-foreground mt-1">
+                Do you want blog to be public?
+              </p>
+              <Switch
+                disabled={isPending}
+                id="status"
+                checked={form.isActive}
+                onCheckedChange={(checked) =>
+                  setForm((prev) => ({ ...prev, isActive: checked }))
                 }
-                defaultDate={new Date(form.publishAt)}
-                onSubmit={(date) => {
-                  setForm((prev) => ({
-                    ...prev,
-                    publishAt: date.toISOString(),
-                  }));
-                }}
               />
             </div>
           </div>
+          <div className="flex flex-col space-y-1.5">
+            <Label>Publish At</Label>
+            <DatePicker
+              disabled={(post && isPast(new Date(post.publishAt))) || isPending}
+              defaultDate={new Date(form.publishAt)}
+              onSubmit={(date) => {
+                setForm((prev) => ({
+                  ...prev,
+                  publishAt: date.toISOString(),
+                }));
+              }}
+            />
+          </div>
         </div>
-      </div>
-      <div className="border rounded-lg p-6 bg-card mt-4">
-        <h3 className="text-2xl font-semibold leading-none tracking-tight mb-4">
-          Content
-        </h3>
-        <TiptapEditor
-          content={JSON.parse(form.contentJson)}
-          onChange={(data) => {
-            setForm((prev) => ({
-              ...prev,
-              contentJson: data.json,
-              contentText: data.text,
-              contentHTML: data.html,
-            }));
-          }}
-        />
+        <div className="col-span-2">
+          <div className="flex flex-col space-y-1.5">
+            <Label>Content</Label>
+            <TiptapEditor
+              content={JSON.parse(form.contentJson)}
+              onChange={(data) => {
+                setForm((prev) => ({
+                  ...prev,
+                  contentJson: data.json,
+                  contentText: data.text,
+                  contentHTML: data.html,
+                }));
+              }}
+            />
+          </div>
+        </div>
       </div>
       <div className="flex justify-end gap-2 mt-4">
         <Button onClick={() => router.back()} type="button" variant="outline">
@@ -408,26 +381,23 @@ const BlogForm1 = ({
 
         <Button
           disabled={
-            form.thumnail == "" ||
+            form.image == "" ||
             form.title == "" ||
             form.slug == "" ||
-            form.contentText == ""
-            // (type == "edit" &&
-            //   isEqual(
-            //     form,
-            //     omit(blog, ["id", "author", "tag", "createAt", "updateAt"])
-            //   ))
+            form.contentText == "" ||
+            (post &&
+              isEqual(
+                form,
+                omit(post, ["id", "author", "tag", "createdAt", "updatedAt"])
+              ))
           }
           type="submit"
         >
           {isPending ? (
             <Loader2Icon
-              className={cn(
-                "h-4 w-4 animate-spin",
-                type == "create" ? "mx-3.5" : "mx-2"
-              )}
+              className={cn("h-4 w-4 animate-spin", !post ? "mx-3.5" : "mx-2")}
             />
-          ) : type == "create" ? (
+          ) : !post ? (
             "Create"
           ) : (
             "Save"
@@ -437,5 +407,3 @@ const BlogForm1 = ({
     </form>
   );
 };
-
-export default BlogForm1;

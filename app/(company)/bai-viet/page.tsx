@@ -1,4 +1,4 @@
-import { queryBlog } from "@/service/api/blog";
+import { queryPost } from "@/service/api/post";
 import { getAllTag } from "@/service/api/tag";
 import React from "react";
 import Image from "next/image";
@@ -15,17 +15,16 @@ export const dynamic = "force-dymanic";
 export const dymanicParams = true;
 export const revalidate = 0;
 
-type BlogListPageProps = {
+type PostListPageProps = {
   searchParams: {
     tag?: string;
     page?: string;
   };
 };
 
-const BlogListPage = async ({ searchParams }: BlogListPageProps) => {
-  const { blogs, metadata } = await queryBlog(searchParams);
+const PostListPage = async ({ searchParams }: PostListPageProps) => {
+  const { posts, metadata } = await queryPost(searchParams);
   const tags = await getAllTag();
-
   return (
     <div className="lg:mx-auto lg:max-w-screen-xl">
       <div className="mt-2 mx-auto">
@@ -33,22 +32,22 @@ const BlogListPage = async ({ searchParams }: BlogListPageProps) => {
       </div>
       <div className="mb-10">
         <Tags tags={tags} />
-        {blogs.length == 0 ? (
+        {posts.length == 0 ? (
           <p className="text-center h-[500px]">
             Không tìm thấy bài viết nào khớp với lựa chọn của bạn.
           </p>
         ) : (
           <>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 px-4">
-              {blogs.map((blog) => (
+              {posts.map((post) => (
                 <Link
-                  key={blog.id}
-                  href={`/bai-viet/${blog.slug}`}
+                  key={post.id}
+                  href={`/bai-viet/${post.slug}`}
                   className="rounded-lg overflow-hidden bg-accent"
                 >
                   <AspectRatio ratio={16 / 9} className="max-h-[250px]">
                     <Image
-                      src={blog.thumnail}
+                      src={post.image}
                       alt="thumnail"
                       fill
                       className="rounded-md object-cover"
@@ -57,16 +56,16 @@ const BlogListPage = async ({ searchParams }: BlogListPageProps) => {
                   <div className="flex flex-col gap-2 p-4">
                     <div className="flex items-center justify-between gap-3">
                       <Badge>
-                        <p className="line-clamp-1">{blog.tag.name}</p>
+                        <p className="line-clamp-1">{post.tag.name}</p>
                       </Badge>
                       <p className="text-sm line-clamp-1">
-                        {format(new Date(blog.publishAt), "PP", { locale: vi })}
+                        {format(new Date(post.publishAt), "PP", { locale: vi })}
                       </p>
                     </div>
                     <h4 className="font-bold text-lg line-clamp-2 hover:text-primary">
-                      {blog.title}
+                      {post.title}
                     </h4>
-                    <p className="line-clamp-2 text-sm">{blog.shortContent}</p>
+                    <p className="line-clamp-2 text-sm">{post.shortContent}</p>
                   </div>
                 </Link>
               ))}
@@ -86,4 +85,4 @@ const BlogListPage = async ({ searchParams }: BlogListPageProps) => {
   );
 };
 
-export default BlogListPage;
+export default PostListPage;

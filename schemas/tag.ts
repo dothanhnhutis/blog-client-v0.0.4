@@ -20,13 +20,13 @@ export type MutationTagResponse = {
   message: string;
   tag: MutationTagPayload & {
     id: string;
-    createAt: Date;
-    updateAt: Date;
+    createdAt: Date;
+    updatedAt: Date;
   };
 };
 
 export type Tag = MutationTagResponse["tag"] & {
   _count: {
-    blog: number;
+    post: number;
   };
 };

@@ -7,7 +7,7 @@ import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 
-const featuredBlogsData = [
+const featuredPostsData = [
   {
     id: "tin-tuc-gia-cong",
     label: "Tin tức gia công",
@@ -145,22 +145,22 @@ const featuredBlogsData = [
     ],
   },
 ];
-export const BlogTabs = () => {
-  const [featuredBlogsTap, setFeaturedBlogsTap] = React.useState<string>(
-    featuredBlogsData[0].id
+export const PostTabs = () => {
+  const [featuredPostsTap, setFeaturedPostsTap] = React.useState<string>(
+    featuredPostsData[0].id
   );
 
   return (
-    <Tabs value={featuredBlogsTap} className="w-full mt-5">
+    <Tabs value={featuredPostsTap} className="w-full mt-5">
       <div className="flex justify-center px-2">
         <div className="flex gap-2 items-center overflow-x-scroll max-w-full">
-          {featuredBlogsData.map((featuredArticle) => (
+          {featuredPostsData.map((featuredArticle) => (
             <div
               key={featuredArticle.id}
-              onClick={() => setFeaturedBlogsTap(featuredArticle.id)}
+              onClick={() => setFeaturedPostsTap(featuredArticle.id)}
               className={cn(
                 "inline-flex items-center px-2.5 py-0.5 font-semibold transition-colors flex-shrink-0 cursor-pointer",
-                featuredBlogsTap == featuredArticle.id
+                featuredPostsTap == featuredArticle.id
                   ? "text-primary hover:opacity-80"
                   : "text-primary/50"
               )}
@@ -171,7 +171,7 @@ export const BlogTabs = () => {
         </div>
       </div>
 
-      {featuredBlogsData.map((featuredArticle) => (
+      {featuredPostsData.map((featuredArticle) => (
         <TabsContent
           key={featuredArticle.id}
           value={featuredArticle.id}

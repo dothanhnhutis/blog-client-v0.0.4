@@ -36,8 +36,8 @@ export type Product = ProductFormPayload & {
     name: string;
     avatarUrl: string;
   };
-  createAt: Date;
-  updateAt: Date;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 export type ProductQuery = {

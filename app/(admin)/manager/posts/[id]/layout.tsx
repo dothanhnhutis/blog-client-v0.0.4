@@ -8,7 +8,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import Link from "next/link";
-const BlogLayout = ({ children }: { children: React.ReactNode }) => {
+const PostLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="w-full xl:max-w-screen-xl xl:mx-auto p-4 overflow-hidden">
       <Breadcrumb>
@@ -21,21 +21,21 @@ const BlogLayout = ({ children }: { children: React.ReactNode }) => {
           <BreadcrumbSeparator />
           <BreadcrumbItem>
             <BreadcrumbLink asChild>
-              <Link href="/manager/blogs">Blogs</Link>
+              <Link href="/manager/posts">Posts</Link>
             </BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>Create</BreadcrumbPage>
+            <BreadcrumbPage>Edit</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
       <div className="flex items-center justify-between gap-2 my-2">
-        <p className="lg:text-2xl font-bold text-lg">New Blog</p>
+        <p className="lg:text-2xl font-bold text-lg">Edit Post</p>
       </div>
       {children}
     </div>
   );
 };
 
-export default BlogLayout;
+export default PostLayout;

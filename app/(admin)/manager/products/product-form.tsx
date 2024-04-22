@@ -5,12 +5,14 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
 import {
+  ChevronLeftIcon,
   EditIcon,
   EyeIcon,
   ImageIcon,
   Loader2Icon,
   LockIcon,
   PlusIcon,
+  ShuffleIcon,
   TrashIcon,
   UnlockIcon,
 } from "lucide-react";
@@ -32,12 +34,11 @@ import { cn, generateSlug } from "@/lib/utils";
 import { toast } from "sonner";
 import TagInput from "./tag-input";
 import { Category } from "@/schemas/category";
-import { ProductImagesUpload } from "./product-images-upload";
 import { CategoryDialog } from "./category-modal";
 import TiptapEditor from "@/components/tiptap-editor";
 import { User } from "@/schemas/user";
 import { createProduct, editProduct } from "@/service/api/product";
-import { UploadMutiple } from "./create/upload-custom";
+import { UploadImage } from "@/components/upload-image";
 
 import {
   Breadcrumb,
@@ -113,8 +114,8 @@ const ProductImage = ({
           src={src}
           alt={name}
           priority
-          width={600}
-          height={600}
+          width={800}
+          height={800}
           className="object-contain rounded-md aspect-square"
         />
 
@@ -132,10 +133,10 @@ const ProductImage = ({
     );
   }
   const element = (
-    <div className="aspect-square size-full min-[400px]:first:col-span-2 min-[400px]:first:row-span-2 overflow-hidden">
+    <div className="aspect-square size-full sm:first:col-span-2 sm:first:row-span-2 overflow-hidden">
       <div
         className={cn(
-          "flex flex-col justify-center items-center text-center h-full min-[400px]:gap-2 size-full border-dashed border rounded-md",
+          "flex flex-col justify-center items-center text-center h-full sm:gap-2 size-full border-dashed border rounded-md",
           isUpload ? "cursor-pointer hover:border-primary" : ""
         )}
       >
@@ -158,9 +159,9 @@ const ProductImage = ({
     </div>
   );
   return isUpload ? (
-    <UploadMutiple multiple onchange={onSave}>
+    <UploadImage multiple onchange={onSave}>
       {element}
-    </UploadMutiple>
+    </UploadImage>
   ) : (
     element
   );
@@ -182,40 +183,33 @@ export const ProductForm = ({
   const router = useRouter();
   const [isLockSlug, setIsLockSlug] = React.useState<boolean>(true);
   // const ref = React.useRef<TipTapEditorHandle>(null);
-
   const [form, setForm] = React.useState<ProductFormPayload>(() => {
-    return (
-      product || {
-        images: [],
-        video: null,
-        productName: "",
-        description: "",
-        slug: "",
-        code: "",
-        categoryId: categories.length > 0 ? categories[0].id : "",
-        benefits: [],
-        ingredients: [],
-        contentJson: JSON.stringify({
-          type: "doc",
-          content: [
-            {
-              type: "paragraph",
-              attrs: {
-                textAlign: "left",
-              },
+    return {
+      images: [],
+      video: null,
+      productName: "",
+      description: "",
+      slug: "",
+      code: "",
+      categoryId: categories.length > 0 ? categories[0].id : "",
+      benefits: [],
+      ingredients: [],
+      contentJson: JSON.stringify({
+        type: "doc",
+        content: [
+          {
+            type: "paragraph",
+            attrs: {
+              textAlign: "left",
             },
-          ],
-        }),
-        contentText: "",
-        contentHTML: "",
-        isActive: true,
-      }
-    );
+          },
+        ],
+      }),
+      contentText: "",
+      contentHTML: "",
+      isActive: true,
+    };
   });
-
-  React.useEffect(() => {
-    setForm((prev) => ({ ...prev, slug: generateSlug(prev.productName) }));
-  }, [form.productName]);
 
   const [isPending, startTransistion] = useTransition();
 
@@ -225,11 +219,13 @@ export const ProductForm = ({
       if (!product) {
         createProduct(form)
           .then((data) => {
+            console.log(data);
             if (data.statusCode == 201) {
               router.push("/manager/products");
+
               toast.success(data.message);
             } else {
-              toast.success(data.message);
+              toast.error(data.message);
             }
           })
           .catch((error) => {
@@ -255,49 +251,76 @@ export const ProductForm = ({
   return (
     <form onSubmit={handlerSubmit}>
       <div className="sticky top-[73px] w-full backdrop-saturate-[1.8] backdrop-blur bg-background/50 z-50">
-        <div className="w-full xl:max-w-screen-xl xl:mx-auto p-4 overflow-hidden">
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem>
-                <BreadcrumbLink asChild>
-                  <Link href="/manager">Home</Link>
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbLink asChild>
-                <Link href="/manager/products">Products</Link>
-              </BreadcrumbLink>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbPage>Create</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-          <div className="flex items-center justify-between gap-2 my-2">
-            <h2 className="lg:text-2xl font-bold text-lg">New Product</h2>
+        <div className="w-full xl:max-w-screen-xl xl:mx-auto p-4 overflow-hidden ">
+          <Link
+            href="/manager/products"
+            className="text-sm inline-flex items-center justify-center hover:bg-muted p-1 rounded-md"
+          >
+            <ChevronLeftIcon className="size-4" />
+            <span>Back</span>
+          </Link>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between gap-2 my-2">
+              <h2 className="lg:text-xl font-bold text-lg">New Product</h2>
+            </div>
+            <div className="flex justify-end items-center gap-2">
+              <Button
+                onClick={() => router.back()}
+                type="button"
+                variant="outline"
+              >
+                Cancel
+              </Button>
+              <Button
+                disabled={
+                  form.images.length == 0 ||
+                  form.productName == "" ||
+                  form.code == "" ||
+                  form.slug == "" ||
+                  form.benefits.length == 0 ||
+                  form.ingredients.length == 0 ||
+                  form.description == "" ||
+                  form.contentText == ""
+                }
+                type="submit"
+              >
+                {isPending ? (
+                  <Loader2Icon
+                    className={cn(
+                      "h-4 w-4 animate-spin",
+                      !id ? "mx-3.5" : "mx-2"
+                    )}
+                  />
+                ) : !id ? (
+                  "Create"
+                ) : (
+                  "Save"
+                )}
+              </Button>
+            </div>
           </div>
         </div>
       </div>
       <div className="w-full lg:max-w-screen-xl lg:mx-auto p-4 overflow-hidden">
         <div className="grid lg:grid-cols-[1fr_1fr_460px] gap-4 ">
-          <div className="lg:order-last col-span-2 lg:col-span-1 flex lg:flex-col gap-4">
-            <div className="bg-card max-w-[460px] p-4 rounded-lg shadow min-[500px]:bg-red-500  md:max-lg:bg-green-500 lg:max-xl:bg-blue-500">
+          <div className="lg:order-last col-span-2 lg:col-span-1 gap-4">
+            <div className="bg-card space-y-1.5 p-4 rounded-lg shadow ">
               <h3 className="font-semibold text-base">Product image</h3>
               <p className="text-muted-foreground text-xs">
                 {`It's recommended to include at least 1 images to adequately your
           product.`}
               </p>
 
-              <div className="grid w-full grid-cols-3 min-[400px]:grid-cols-4 gap-3 mt-4 ">
-                <div className="aspect-square size-full min-[400px]:first:col-span-2 min-[400px]:first:row-span-2 overflow-hidden">
+              <div className="grid w-full grid-cols-3 sm:grid-cols-6 lg:grid-cols-3 gap-3 mt-4 ">
+                <div className="aspect-square size-full sm:first:col-span-2 sm:first:row-span-2 overflow-hidden">
                   {form.images[0] ? (
                     <div className="relative group overflow-hidden border rounded-md">
                       <Image
                         src={form.images[0]}
                         alt="Main image"
                         priority
-                        width={600}
-                        height={600}
+                        width={800}
+                        height={800}
                         className="object-contain rounded-md aspect-square"
                       />
 
@@ -318,7 +341,7 @@ export const ProductForm = ({
                       </div>
                     </div>
                   ) : (
-                    <UploadMutiple
+                    <UploadImage
                       multiple
                       onchange={(images) => {
                         if (images.length + form.images.length <= 9) {
@@ -332,13 +355,13 @@ export const ProductForm = ({
                       }}
                     >
                       <div className="flex flex-col justify-center items-center text-center h-full gap-2 size-full border-dashed border rounded-md cursor-pointer hover:border-primary">
-                        <ImageIcon className="size-6 flex-shrink-0 text-muted-foreground" />
-                        <p className="min-[400px]:hidden text-xs font-medium">
+                        <ImageIcon className="size-6 flex-shrink-0 text-muted-foreground aspect-square" />
+                        <p className="sm:hidden text-xs font-medium">
                           Upload image
                         </p>
-                        <ul className="list-disc text-start text-xs text-muted-foreground px-4 ml-4 hidden min-[400px]:block ">
+                        <ul className="list-disc text-start text-xs text-muted-foreground px-4 ml-4 hidden sm:block ">
                           <li>
-                            <p>Dimensions: 800 x 600px</p>
+                            <p>Dimensions: 800 x 800px</p>
                           </li>
                           <li>
                             <p>Maximum file size: 5MB (Up to 9 files)</p>
@@ -348,7 +371,7 @@ export const ProductForm = ({
                           </li>
                         </ul>
                       </div>
-                    </UploadMutiple>
+                    </UploadImage>
                   )}
                 </div>
                 {imageUploads.map((img, i) => (
@@ -383,8 +406,8 @@ export const ProductForm = ({
           <div className="col-span-2 bg-card p-4 rounded-lg shadow">
             <h3 className="font-semibold text-base">Product Detail</h3>
 
-            <div className="grid grid-cols-2 gap-4 mt-4 ">
-              <div className="flex flex-col col-span-2 space-y-1.5">
+            <div className="grid grid-cols-1 gap-4 mt-4 ">
+              <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="name">Name</Label>
                 <Input
                   value={form.productName}
@@ -404,7 +427,7 @@ export const ProductForm = ({
                 <Label htmlFor="slug">Slug</Label>
                 <div className="flex gap-2">
                   <Input
-                    disabled={isLockSlug}
+                    disabled={isPending}
                     id="slug"
                     name="slug"
                     className="focus-visible:ring-transparent "
@@ -420,17 +443,18 @@ export const ProductForm = ({
                   <Button
                     type="button"
                     variant="secondary"
-                    onClick={() => setIsLockSlug(!isLockSlug)}
+                    onClick={() =>
+                      setForm((prev) => ({
+                        ...prev,
+                        slug: generateSlug(prev.productName),
+                      }))
+                    }
                   >
-                    {!isLockSlug ? (
-                      <UnlockIcon className="w-4 h-4" />
-                    ) : (
-                      <LockIcon className="w-4 h-4" />
-                    )}
+                    <ShuffleIcon className="size-4" />
                   </Button>
                 </div>
               </div>
-              <div className="flex flex-col  space-y-1.5">
+              <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="code">Code</Label>
                 <Input
                   value={form.code}
@@ -459,7 +483,10 @@ export const ProductForm = ({
                     value={form.categoryId}
                   >
                     <SelectTrigger className="focus-visible:ring-transparent focus:ring-transparent text-start h-auto">
-                      <SelectValue className="h-10" placeholder="Select tag" />
+                      <SelectValue
+                        className="h-10"
+                        placeholder="Select category"
+                      />
                     </SelectTrigger>
                     <SelectContent id="categories">
                       {categories.map((t) => (
@@ -523,6 +550,7 @@ export const ProductForm = ({
                   }}
                 />
               </div>
+
               {/* <div className="flex flex-col space-y-1.5">
                 <Label>Created by</Label>
                 <div className="flex items-center gap-2 border p-2 px-3 rounded-lg">
@@ -541,7 +569,7 @@ export const ProductForm = ({
                 </div>
               </div> */}
 
-              <div className="w-full col-span-2">
+              <div className="w-full">
                 <Label>Short description</Label>
                 <Textarea
                   className="focus-visible:ring-offset-0 focus-visible:ring-transparent"
@@ -576,35 +604,6 @@ export const ProductForm = ({
               }));
             }}
           />
-        </div>
-
-        <div className="flex justify-end gap-2 mt-4">
-          <Button onClick={() => router.back()} type="button" variant="outline">
-            Cancel
-          </Button>
-          <Button
-            disabled={
-              form.images.length == 0 ||
-              form.productName == "" ||
-              form.code == "" ||
-              form.slug == "" ||
-              form.benefits.length == 0 ||
-              form.ingredients.length == 0 ||
-              form.description == "" ||
-              form.contentText == ""
-            }
-            type="submit"
-          >
-            {isPending ? (
-              <Loader2Icon
-                className={cn("h-4 w-4 animate-spin", !id ? "mx-3.5" : "mx-2")}
-              />
-            ) : !id ? (
-              "Create"
-            ) : (
-              "Save"
-            )}
-          </Button>
         </div>
       </div>
     </form>

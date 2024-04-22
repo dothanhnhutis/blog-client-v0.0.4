@@ -22,8 +22,8 @@ import { editUserById } from "@/service/api/user";
 export const EditUserForm = ({
   id,
   email,
-  createAt,
-  updateAt,
+  createdAt,
+  updatedAt,
   avatarUrl,
   ...other
 }: User) => {

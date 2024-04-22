@@ -21,7 +21,7 @@ import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Button } from "@/components/ui/button";
 import { EightStepProcessCarousel } from "./eight-step-process-carousel";
 import { ServiceTabs } from "./service-tabs";
-import { BlogTabs } from "./blog-tabs";
+import { PostTabs } from "./post-tabs";
 import { ContactForm } from "./contact-form";
 import { IoIosStar, IoIosStarHalf, IoIosStarOutline } from "react-icons/io";
 
@@ -465,7 +465,7 @@ export default function Home() {
             BÀI VIẾT NỔI BẬT
           </h3>
         </div>
-        <BlogTabs />
+        <PostTabs />
       </section>
 
       {/* <section className="lg:mx-auto lg:max-w-screen-xl flex flex-col items-center my-10">

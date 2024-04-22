@@ -72,7 +72,7 @@ function DataTable({
         //     if (data.) {
         //       toast.error(data.error);
         //     } else {
-        //       toast.success("Edit blog success");
+        //       toast.success("Edit product success");
         //     }
         //   })
         //   .catch((error) => console.log(error));

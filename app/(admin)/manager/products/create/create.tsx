@@ -4,8 +4,14 @@ import { Category } from "@/schemas/category";
 import { User } from "@/schemas/user";
 import Link from "next/link";
 import Image from "next/image";
-import { UploadMutiple } from "./upload-custom";
-import { EditIcon, EyeIcon, ImageIcon, TrashIcon } from "lucide-react";
+import { UploadImage } from "@/components/upload-image";
+import {
+  EditIcon,
+  EyeIcon,
+  ImageIcon,
+  PlusIcon,
+  TrashIcon,
+} from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 
 import Box1 from "@/images/icons/box1.png";
@@ -22,6 +28,19 @@ import { ProductFormPayload } from "@/schemas/product";
 import { toast } from "sonner";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
+import TagInput from "../tag-input";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { CategoryDialog } from "../category-modal";
+import { Textarea } from "@/components/ui/textarea";
 
 const imageUploads: IProductImageBox[] = [
   { icon: Box1.src, alt: "Primary image", name: "Primary" },
@@ -123,9 +142,9 @@ const ProductImage = ({
     </div>
   );
   return isUpload ? (
-    <UploadMutiple multiple onchange={onSave}>
+    <UploadImage multiple onchange={onSave}>
       {element}
-    </UploadMutiple>
+    </UploadImage>
   ) : (
     element
   );
@@ -223,7 +242,7 @@ export const CreateProduct = ({
                   </div>
                 </div>
               ) : (
-                <UploadMutiple
+                <UploadImage
                   multiple
                   onchange={(images) => {
                     if (images.length + form.images.length <= 9) {
@@ -253,7 +272,7 @@ export const CreateProduct = ({
                       </li>
                     </ul>
                   </div>
-                </UploadMutiple>
+                </UploadImage>
               )}
             </div>
             {imageUploads.map((img, i) => (
@@ -319,7 +338,7 @@ export const CreateProduct = ({
             <Label htmlFor="slug">Slug</Label>
             <div className="flex gap-2">
               <Input
-                disabled={isLockSlug}
+                // disabled={isLockSlug}
                 id="slug"
                 name="slug"
                 className="focus-visible:ring-transparent "
@@ -335,13 +354,13 @@ export const CreateProduct = ({
               <Button
                 type="button"
                 variant="secondary"
-                onClick={() => setIsLockSlug(!isLockSlug)}
+                // onClick={() => setIsLockSlug(!isLockSlug)}
               >
-                {!isLockSlug ? (
+                {/* {!isLockSlug ? (
                   <UnlockIcon className="w-4 h-4" />
                 ) : (
                   <LockIcon className="w-4 h-4" />
-                )}
+                )} */}
               </Button>
             </div>
           </div>
@@ -428,7 +447,7 @@ export const CreateProduct = ({
               </Select>
               <CategoryDialog categories={categories}>
                 <Button
-                  disabled={isPending}
+                  // disabled={isPending}
                   variant="secondary"
                   type="button"
                   className="h-full"

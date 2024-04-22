@@ -44,7 +44,7 @@ import Box7 from "@/images/icons/box7.png";
 import Box8 from "@/images/icons/box8.png";
 
 import { cn } from "@/lib/utils";
-import { UploadMutiple } from "./upload-custom";
+import { UploadImage } from "@/components/upload-image";
 
 const imageUploads: IProductImageBox[] = [
   { icon: Box1.src, alt: "Primary image", name: "Primary" },
@@ -146,16 +146,15 @@ const ProductImage = ({
     </div>
   );
   return isUpload ? (
-    <UploadMutiple multiple onchange={onSave}>
+    <UploadImage multiple onchange={onSave}>
       {element}
-    </UploadMutiple>
+    </UploadImage>
   ) : (
     element
   );
 };
 
 export const ProductLayout = () => {
-  const status: string = "image";
   return (
     <>
       <div className="sticky top-[73px] w-full backdrop-saturate-[1.8] backdrop-blur bg-background/50 z-50">
@@ -193,7 +192,7 @@ export const ProductLayout = () => {
           <div className="grid w-full grid-cols-3 min-[400px]:grid-cols-4 gap-3 mt-4">
             <div className="aspect-square size-full min-[400px]:first:col-span-2 min-[400px]:first:row-span-2 overflow-hidden">
               {true ? (
-                <UploadMutiple
+                <UploadImage
                   multiple
                   onchange={(images) => {
                     console.log(images);
@@ -216,7 +215,7 @@ export const ProductLayout = () => {
                       </li>
                     </ul>
                   </div>
-                </UploadMutiple>
+                </UploadImage>
               ) : (
                 <div className="relative group overflow-hidden border rounded-md">
                   <Image
