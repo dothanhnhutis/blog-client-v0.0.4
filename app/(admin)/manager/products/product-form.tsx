@@ -278,17 +278,17 @@ export const ProductForm = ({
           </div>
         </div>
       </div>
-      <div className="w-full xl:max-w-screen-xl xl:mx-auto p-4 overflow-hidden">
-        <div className="grid xl:grid-cols-[1fr_1fr_460px] gap-4">
-          <div className="xl:order-last col-span-2 xl:col-span-1">
-            <div className="bg-card max-w-[460px] p-4 rounded-lg ">
+      <div className="w-full lg:max-w-screen-xl lg:mx-auto p-4 overflow-hidden">
+        <div className="grid lg:grid-cols-[1fr_1fr_460px] gap-4 ">
+          <div className="lg:order-last col-span-2 lg:col-span-1 flex lg:flex-col gap-4">
+            <div className="bg-card max-w-[460px] p-4 rounded-lg shadow min-[500px]:bg-red-500  md:max-lg:bg-green-500 lg:max-xl:bg-blue-500">
               <h3 className="font-semibold text-base">Product image</h3>
               <p className="text-muted-foreground text-xs">
                 {`It's recommended to include at least 1 images to adequately your
           product.`}
               </p>
 
-              <div className="grid w-full grid-cols-3 min-[400px]:grid-cols-4 gap-3 mt-4">
+              <div className="grid w-full grid-cols-3 min-[400px]:grid-cols-4 gap-3 mt-4 ">
                 <div className="aspect-square size-full min-[400px]:first:col-span-2 min-[400px]:first:row-span-2 overflow-hidden">
                   {form.images[0] ? (
                     <div className="relative group overflow-hidden border rounded-md">
@@ -380,11 +380,11 @@ export const ProductForm = ({
               </div>
             </div>
           </div>
-          <div className="col-span-2 bg-card p-4 rounded-lg">
+          <div className="col-span-2 bg-card p-4 rounded-lg shadow">
             <h3 className="font-semibold text-base">Product Detail</h3>
 
-            <div className="flex flex-wrap w-full gap-4 mt-4 ">
-              <div className="flex flex-col space-y-1.5 col-span-2 md:col-auto w-full md:flex-[1_1_calc(50%-16px)]">
+            <div className="grid grid-cols-2 gap-4 mt-4 ">
+              <div className="flex flex-col col-span-2 space-y-1.5">
                 <Label htmlFor="name">Name</Label>
                 <Input
                   value={form.productName}
@@ -400,23 +400,7 @@ export const ProductForm = ({
                   placeholder="Name of your product"
                 />
               </div>
-              <div className="flex flex-col space-y-1.5 col-span-2 md:col-auto w-full md:flex-[1_1_calc(50%-16px)]">
-                <Label htmlFor="code">Code</Label>
-                <Input
-                  value={form.code}
-                  onChange={(e) =>
-                    setForm((prev) => ({
-                      ...prev,
-                      code: e.target.value,
-                    }))
-                  }
-                  id="code"
-                  name="code"
-                  className="focus-visible:ring-transparent "
-                  placeholder="Code"
-                />
-              </div>
-              <div className="flex flex-col space-y-1.5 col-span-2 md:col-auto w-full md:flex-[1_1_calc(50%-16px)]">
+              <div className="flex flex-col space-y-1.5">
                 <Label htmlFor="slug">Slug</Label>
                 <div className="flex gap-2">
                   <Input
@@ -446,62 +430,23 @@ export const ProductForm = ({
                   </Button>
                 </div>
               </div>
-              <div className="flex flex-col space-y-1.5 col-span-2 md:col-auto w-full md:flex-[1_1_calc(50%-16px)]">
-                <Label htmlFor="status">Active</Label>
-                <div className="flex items-center justify-between h-full">
-                  <p className="text-xs font-light text-muted-foreground mt-1">
-                    Do you want product to be public?
-                  </p>
-                  <Switch
-                    id="status"
-                    checked={form.isActive}
-                    onCheckedChange={(checked) =>
-                      setForm((prev) => ({ ...prev, isActive: checked }))
-                    }
-                  />
-                </div>
-              </div>
-
-              <div className="flex flex-col space-y-1.5 col-span-2 md:col-auto w-full md:flex-[1_1_calc(50%-16px)]">
-                <Label htmlFor="benefits">Benefits</Label>
-                <TagInput
-                  id="benefits"
-                  placeholder="Add benefits"
-                  value={form.benefits}
-                  onChange={(data) => {
-                    setForm((prev) => ({ ...prev, benefits: data }));
-                  }}
+              <div className="flex flex-col  space-y-1.5">
+                <Label htmlFor="code">Code</Label>
+                <Input
+                  value={form.code}
+                  onChange={(e) =>
+                    setForm((prev) => ({
+                      ...prev,
+                      code: e.target.value,
+                    }))
+                  }
+                  id="code"
+                  name="code"
+                  className="focus-visible:ring-transparent "
+                  placeholder="Code"
                 />
               </div>
-              <div className="flex flex-col space-y-1.5 col-span-2 md:col-auto w-full md:flex-[1_1_calc(50%-16px)]">
-                <Label htmlFor="benefits">Ingredients</Label>
-                <TagInput
-                  id="ingredients"
-                  placeholder="Add ingredients"
-                  value={form.ingredients}
-                  onChange={(data) => {
-                    setForm((prev) => ({ ...prev, ingredients: data }));
-                  }}
-                />
-              </div>
-              <div className="flex flex-col space-y-1.5 col-span-2 md:col-auto w-full md:flex-[1_1_calc(50%-16px)]">
-                <Label>Created by</Label>
-                <div className="flex items-center gap-2 border p-2 px-3 rounded-lg">
-                  <Avatar className="size-9">
-                    <AvatarImage src={AvatarDefault.src} alt="avatar" />
-                    <AvatarFallback>
-                      <Skeleton className="size-9 rounded-full" />
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="w-full overflow-hidden h-9">
-                    <p className="truncate text-sm">{currentUser.name}</p>
-                    <p className="text-xs text-muted-foreground truncate">
-                      {currentUser.email}
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="flex flex-col space-y-1.5 col-span-2 md:col-auto w-full md:flex-[1_1_calc(50%-16px)]">
+              <div className="flex flex-col space-y-1.5 ">
                 <Label htmlFor="category">Category</Label>
                 <div className="flex gap-2">
                   <Select
@@ -539,7 +484,64 @@ export const ProductForm = ({
                   </CategoryDialog>
                 </div>
               </div>
-              <div className="w-full">
+
+              <div className="flex flex-col space-y-1.5">
+                <Label htmlFor="status">Active</Label>
+                <div className="flex items-center justify-between h-full">
+                  <p className="text-xs font-light text-muted-foreground mt-1">
+                    Do you want product to be public?
+                  </p>
+                  <Switch
+                    id="status"
+                    checked={form.isActive}
+                    onCheckedChange={(checked) =>
+                      setForm((prev) => ({ ...prev, isActive: checked }))
+                    }
+                  />
+                </div>
+              </div>
+
+              <div className="flex flex-col space-y-1.5">
+                <Label htmlFor="benefits">Benefits</Label>
+                <TagInput
+                  id="benefits"
+                  placeholder="Add benefits"
+                  value={form.benefits}
+                  onChange={(data) => {
+                    setForm((prev) => ({ ...prev, benefits: data }));
+                  }}
+                />
+              </div>
+              <div className="flex flex-col space-y-1.5">
+                <Label htmlFor="benefits">Ingredients</Label>
+                <TagInput
+                  id="ingredients"
+                  placeholder="Add ingredients"
+                  value={form.ingredients}
+                  onChange={(data) => {
+                    setForm((prev) => ({ ...prev, ingredients: data }));
+                  }}
+                />
+              </div>
+              {/* <div className="flex flex-col space-y-1.5">
+                <Label>Created by</Label>
+                <div className="flex items-center gap-2 border p-2 px-3 rounded-lg">
+                  <Avatar className="size-9">
+                    <AvatarImage src={AvatarDefault.src} alt="avatar" />
+                    <AvatarFallback>
+                      <Skeleton className="size-9 rounded-full" />
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="w-full overflow-hidden h-9">
+                    <p className="truncate text-sm">{currentUser.name}</p>
+                    <p className="text-xs text-muted-foreground truncate">
+                      {currentUser.email}
+                    </p>
+                  </div>
+                </div>
+              </div> */}
+
+              <div className="w-full col-span-2">
                 <Label>Short description</Label>
                 <Textarea
                   className="focus-visible:ring-offset-0 focus-visible:ring-transparent"
@@ -556,8 +558,8 @@ export const ProductForm = ({
             </div>
           </div>
         </div>
-        <div className="flex flex-col space-y-1.5 mt-4 bg-card p-4 rounded-lg">
-          <h3 className="font-semibold text-base">Product description</h3>
+        <div className="flex flex-col space-y-1.5 mt-4 bg-card p-4 rounded-lg shadow">
+          <h3 className="font-semibold text-base">Content</h3>
           <p className="text-muted-foreground text-xs">
             Recommended to provide a description of at least 500 characters long
             and addd image to help make purchasing decisions.

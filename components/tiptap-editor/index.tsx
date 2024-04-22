@@ -14,6 +14,7 @@ import { MoreAction } from "./more-action";
 import { ColorAction } from "./color-action";
 import { InsertAction } from "./insert-action";
 import { extensions as defaultExtensions } from "./extensions";
+import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 
 declare module "@tiptap/core" {
   interface Commands<ReturnType> {
@@ -63,15 +64,19 @@ const TiptapEditor = ({
 
   return (
     <div className="relative border rounded-lg overflow-hidden">
-      <div className="flex flex-wrap gap-1 border-b p-2">
-        <InsertAction editor={editor} />
-        <DropdownNodeActions editor={editor} />
-        <GroupButtonAction editor={editor} />
-        <LinkAction editor={editor} />
-        <ColorAction editor={editor} type="highlight" />
-        <ColorAction editor={editor} type="textColor" />
-        <MoreAction editor={editor} />
-      </div>
+      <ScrollArea>
+        <div className="flex gap-1 border-b p-2">
+          <InsertAction editor={editor} />
+          <DropdownNodeActions editor={editor} />
+          <GroupButtonAction editor={editor} />
+          <LinkAction editor={editor} />
+          <ColorAction editor={editor} type="highlight" />
+          <ColorAction editor={editor} type="textColor" />
+          <MoreAction editor={editor} />
+        </div>
+        <ScrollBar orientation="horizontal" />
+      </ScrollArea>
+
       <EditorContent
         editor={editor}
         spellCheck={false}

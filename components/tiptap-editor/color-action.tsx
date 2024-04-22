@@ -74,7 +74,12 @@ export const ColorAction = ({
         <Button
           type="button"
           size="icon"
-          variant={editor.isActive("highlight") ? "secondary" : "ghost"}
+          variant={
+            (type == "highlight" && editor.isActive("highlight")) ||
+            (type == "textColor" && editor.isActive("textStyle"))
+              ? "secondary"
+              : "ghost"
+          }
           className="rounded-md"
         >
           {type == "highlight" ? (

@@ -163,7 +163,7 @@ export const DropdownNodeActions = ({ editor }: { editor: Editor }) => {
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[170px] p-0">
-        <Command className="rounded-lg border shadow-md">
+        <Command className="rounded-lg shadow-md">
           <CommandList>
             <CommandGroup heading="Hierarchy">
               {nodeList.hierarchy.map((nodeData, index) => (
