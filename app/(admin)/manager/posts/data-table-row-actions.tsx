@@ -32,7 +32,7 @@ export function DataTableRowActions({
   column,
   table,
 }: DataTableRowActionsProps) {
-  const { id, createAt, updateAt, tag, author, ...other } =
+  const { id, createdAt, updatedAt, tag, author, ...other } =
     row.original as Post;
 
   const copyToClipboard = () => {

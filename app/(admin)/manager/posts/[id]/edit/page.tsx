@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import React from "react";
 import { getAllTag } from "@/service/api/tag";
 import { getAllAuthor, getCurrentUser } from "@/service/api/user";
-import { NewPostForm } from "../../test-form";
+import { PostForm } from "../../post-form";
 import { omit } from "lodash";
 
 type EditPostPageProps = {
@@ -20,7 +20,7 @@ const EditPostPage = async ({ params: { id } }: EditPostPageProps) => {
 
   if (!post) notFound();
   return (
-    <NewPostForm
+    <PostForm
       authors={authors}
       currentUser={currentUser!}
       tags={tags}

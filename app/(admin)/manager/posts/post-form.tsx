@@ -45,7 +45,7 @@ type PostFormProps = {
   tags: Tag[];
   post?: PostFormPayload & { id: string };
 };
-export const NewPostForm = ({
+export const PostForm = ({
   currentUser,
   tags,
   authors,

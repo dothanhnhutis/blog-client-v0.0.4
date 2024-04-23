@@ -58,6 +58,7 @@ import Box6 from "@/images/icons/box6.png";
 import Box7 from "@/images/icons/box7.png";
 import Box8 from "@/images/icons/box8.png";
 import Link from "next/link";
+import { isEqual, omit } from "lodash";
 
 const imageUploads: IProductImageBox[] = [
   { icon: Box1.src, alt: "Primary image", name: "Primary" },
@@ -168,47 +169,41 @@ const ProductImage = ({
 };
 
 type ProductFormProps = {
-  currentUser: User;
   categories: Category[];
-  id?: string;
-  product?: ProductFormPayload;
+  product?: ProductFormPayload & { id: string };
 };
 
-export const ProductForm = ({
-  currentUser,
-  categories,
-  product,
-  id,
-}: ProductFormProps) => {
+export const ProductForm = ({ categories, product }: ProductFormProps) => {
   const router = useRouter();
-  const [isLockSlug, setIsLockSlug] = React.useState<boolean>(true);
   // const ref = React.useRef<TipTapEditorHandle>(null);
   const [form, setForm] = React.useState<ProductFormPayload>(() => {
-    return {
-      images: [],
-      video: null,
-      productName: "",
-      description: "",
-      slug: "",
-      code: "",
-      categoryId: categories.length > 0 ? categories[0].id : "",
-      benefits: [],
-      ingredients: [],
-      contentJson: JSON.stringify({
-        type: "doc",
-        content: [
-          {
-            type: "paragraph",
-            attrs: {
-              textAlign: "left",
-            },
-          },
-        ],
-      }),
-      contentText: "",
-      contentHTML: "",
-      isActive: true,
-    };
+    return product
+      ? omit(product, ["id"])
+      : {
+          images: [],
+          video: null,
+          productName: "",
+          description: "",
+          slug: "",
+          code: "",
+          categoryId: categories.length > 0 ? categories[0].id : "",
+          benefits: [],
+          ingredients: [],
+          contentJson: JSON.stringify({
+            type: "doc",
+            content: [
+              {
+                type: "paragraph",
+                attrs: {
+                  textAlign: "left",
+                },
+              },
+            ],
+          }),
+          contentText: "",
+          contentHTML: "",
+          isActive: true,
+        };
   });
 
   const [isPending, startTransistion] = useTransition();
@@ -219,10 +214,8 @@ export const ProductForm = ({
       if (!product) {
         createProduct(form)
           .then((data) => {
-            console.log(data);
             if (data.statusCode == 201) {
               router.push("/manager/products");
-
               toast.success(data.message);
             } else {
               toast.error(data.message);
@@ -232,18 +225,18 @@ export const ProductForm = ({
             console.log(error);
           });
       } else {
-        // editProduct(id, form)
-        //   .then((data) => {
-        //     if (data.statusCode == 200) {
-        //       router.push("/manager/products");
-        //       toast.success(data.message);
-        //     } else {
-        //       toast.success(data.message);
-        //     }
-        //   })
-        //   .catch((error) => {
-        //     console.log(error);
-        //   });
+        editProduct(product.id, form)
+          .then((data) => {
+            if (data.statusCode == 200) {
+              router.push("/manager/products");
+              toast.success(data.message);
+            } else {
+              toast.error(data.message);
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       }
     });
   };
@@ -261,7 +254,9 @@ export const ProductForm = ({
           </Link>
           <div className="flex items-center justify-between">
             <div className="flex items-center justify-between gap-2 my-2">
-              <h2 className="lg:text-xl font-bold text-lg">New Product</h2>
+              <h2 className="lg:text-xl font-bold text-lg">
+                {product ? "Edit Product" : "New Product"}
+              </h2>
             </div>
             <div className="flex justify-end items-center gap-2">
               <Button
@@ -280,7 +275,8 @@ export const ProductForm = ({
                   form.benefits.length == 0 ||
                   form.ingredients.length == 0 ||
                   form.description == "" ||
-                  form.contentText == ""
+                  form.contentText == "" ||
+                  (product && isEqual(form, omit(product, ["id"])))
                 }
                 type="submit"
               >
@@ -288,10 +284,10 @@ export const ProductForm = ({
                   <Loader2Icon
                     className={cn(
                       "h-4 w-4 animate-spin",
-                      !id ? "mx-3.5" : "mx-2"
+                      !product?.id ? "mx-3.5" : "mx-2"
                     )}
                   />
-                ) : !id ? (
+                ) : !product?.id ? (
                   "Create"
                 ) : (
                   "Save"
@@ -550,24 +546,6 @@ export const ProductForm = ({
                   }}
                 />
               </div>
-
-              {/* <div className="flex flex-col space-y-1.5">
-                <Label>Created by</Label>
-                <div className="flex items-center gap-2 border p-2 px-3 rounded-lg">
-                  <Avatar className="size-9">
-                    <AvatarImage src={AvatarDefault.src} alt="avatar" />
-                    <AvatarFallback>
-                      <Skeleton className="size-9 rounded-full" />
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="w-full overflow-hidden h-9">
-                    <p className="truncate text-sm">{currentUser.name}</p>
-                    <p className="text-xs text-muted-foreground truncate">
-                      {currentUser.email}
-                    </p>
-                  </div>
-                </div>
-              </div> */}
 
               <div className="w-full">
                 <Label>Short description</Label>

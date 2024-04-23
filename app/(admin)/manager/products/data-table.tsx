@@ -38,22 +38,6 @@ function DataTable({
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
-  // const { data: products } = useQuery({
-  //   initialData: data,
-  //   queryKey: ["products"],
-  //   queryFn: async () => {
-  //     const { data } = await httpClient.get<Product[]>("/products");
-  //     return data;
-  //   },
-  // });
-
-  // const { data: categories } = useQuery({
-  //   queryKey: ["categories"],
-  //   queryFn: async () => {
-  //     const { data } = await httpClient.get<Category[]>("/categories");
-  //     return data;
-  //   },
-  // });
 
   const table = useReactTable({
     data: products,
@@ -67,15 +51,15 @@ function DataTable({
         columnId: string,
         value: { id: string; data: any }
       ) => {
-        // editProduct(value.id, value.data)
-        //   .then((data) => {
-        //     if (data.) {
-        //       toast.error(data.error);
-        //     } else {
-        //       toast.success("Edit product success");
-        //     }
-        //   })
-        //   .catch((error) => console.log(error));
+        editProduct(value.id, value.data)
+          .then((data) => {
+            if (data.statusCode == 200) {
+              toast.success(data.message);
+            } else {
+              toast.error(data.message);
+            }
+          })
+          .catch((error) => console.log(error));
       },
     },
     enableRowSelection: true,
@@ -140,7 +124,7 @@ function DataTable({
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
-                  className="h-24 text-center"
+                  className="h-14 text-center"
                 >
                   No results.
                 </TableCell>
