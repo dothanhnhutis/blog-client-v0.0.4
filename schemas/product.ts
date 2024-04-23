@@ -44,7 +44,7 @@ export type ProductQuery = {
   products: {
     id: string;
     slug: string;
-    thumnail: string;
+    image: string;
     productName: string;
     shortContent: string;
     category: {

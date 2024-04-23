@@ -9,6 +9,7 @@ import {
   User,
 } from "@/schemas/user";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 export async function getCurrentUser() {
   try {
@@ -19,7 +20,8 @@ export async function getCurrentUser() {
     });
     return res.data;
   } catch (error: any) {
-    return undefined;
+    redirect("/auth/signout");
+    // return undefined;
   }
 }
 

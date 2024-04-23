@@ -8,30 +8,31 @@ import { PencilIcon, TrashIcon, UploadIcon } from "lucide-react";
 import { toast } from "sonner";
 import { User } from "@/schemas/user";
 import { useRouter } from "next/navigation";
-import { UploadPicture } from "@/components/upload-picture";
 import { editProfile } from "@/service/api/user";
-import {
-  UploadImageMutiple,
-  UploadImageSingle,
-} from "@/components/upload-image";
+import { UploadImage } from "@/components/upload-image";
 
 export const EditAvatar = ({ me }: { me: User }) => {
   const router = useRouter();
   return (
-    <div className="flex items-center justify-center">
-      <div className="relative group">
-        <Avatar className="size-40 rounded-lg">
+    <div className="flex items-center justify-center col-span-2 md:col-span-1">
+      <div className="relative group ">
+        <Avatar className="size-80 aspect-square rounded-lg">
           <AvatarImage src={me?.avatarUrl ?? AvatarDefault.src} />
           <AvatarFallback className="bg-transparent">
-            <Skeleton className="size-40 rounded-lg" />
+            <Skeleton className="size-80 aspect-square rounded-lg" />
           </AvatarFallback>
         </Avatar>
-        <div className="group-hover:bg-black/30 text-white invisible group-hover:visible absolute top-0 left-0 size-40 rounded-lg flex items-center justify-center gap-2">
-          <UploadImageSingle
-            aspectRatios={1}
+        <div className="group-hover:bg-black/30 text-white invisible group-hover:visible absolute top-0 left-0 size-80 aspect-square rounded-lg flex items-center justify-center gap-2">
+          <UploadImage
+            aspectRatio={[
+              {
+                label: "1:1",
+                value: 1,
+              },
+            ]}
             title="Edit Avatar"
-            onchange={(image) => {
-              editProfile({ avatarUrl: image })
+            onchange={(images) => {
+              editProfile({ avatarUrl: images[0] })
                 .then((data) => {
                   if (data.statusCode == 200) {
                     router.push("/account/profile");
@@ -46,7 +47,7 @@ export const EditAvatar = ({ me }: { me: User }) => {
             }}
           >
             <UploadIcon className="size-4" />
-          </UploadImageSingle>
+          </UploadImage>
           <PencilIcon className="size-4" />
           {me?.avatarUrl && (
             <button>

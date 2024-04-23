@@ -49,7 +49,7 @@ const EditProfileForm = ({ currentUser }: { currentUser: User }) => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="grid grid-cols-2 gap-4 overflow-y-scroll"
+      className="grid grid-cols-2 gap-4 overflow-y-scroll bg-background p-4 rounded-lg"
     >
       <div className="col-span-2 lg:col-span-1">
         <Label className="leading-snug text-muted-foreground">Your Name</Label>

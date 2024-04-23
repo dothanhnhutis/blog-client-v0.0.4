@@ -54,13 +54,6 @@ const ProductDetail = async ({ params }: ProductDetailProps) => {
           </Link>
           <ChevronRightIcon className="w-4 h-4 inline mx-1" />
           <span className="font-normal">{product.productName}</span>
-          {/* <Link
-            href={`/gia-cong-my-pham/${product.category.slug}`}
-            prefetch
-            className="inline hover:text-primary font-medium normal-case"
-          >
-            {product.category.name}
-          </Link> */}
         </p>
       </nav>
       <div className="sm:flex sm:gap-4">

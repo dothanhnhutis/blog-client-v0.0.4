@@ -11,9 +11,9 @@ import { format } from "date-fns";
 import PaginationH from "./pagination";
 import { vi } from "date-fns/locale";
 
-export const dynamic = "force-dymanic";
-export const dymanicParams = true;
-export const revalidate = 0;
+// export const dynamic = "force-dymanic";
+// export const dymanicParams = false;
+// export const revalidate = 0;
 
 type PostListPageProps = {
   searchParams: {
@@ -45,14 +45,16 @@ const PostListPage = async ({ searchParams }: PostListPageProps) => {
                   href={`/bai-viet/${post.slug}`}
                   className="rounded-lg overflow-hidden bg-accent"
                 >
-                  <AspectRatio ratio={16 / 9} className="max-h-[250px]">
+                  <div className="bg-muted">
                     <Image
+                      priority
                       src={post.image}
-                      alt="thumnail"
-                      fill
-                      className="rounded-md object-cover"
+                      alt="image"
+                      height={600}
+                      width={800}
+                      className="rounded-md object-cover aspect-[4/3]"
                     />
-                  </AspectRatio>
+                  </div>
                   <div className="flex flex-col gap-2 p-4">
                     <div className="flex items-center justify-between gap-3">
                       <Badge>

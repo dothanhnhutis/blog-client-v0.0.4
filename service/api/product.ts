@@ -7,9 +7,9 @@ import { cookiesServer } from "../cookieSession";
 import { cookies } from "next/headers";
 
 type QueryProductType = {
+  limit?: string;
   category?: string;
   page?: string;
-  slug?: string;
 };
 
 export const getProductByIdOrSlug = async (slug: string) => {
@@ -21,7 +21,7 @@ export const getProductByIdOrSlug = async (slug: string) => {
     });
     return data;
   } catch (error) {
-    throw error;
+    return undefined;
   }
 };
 
@@ -34,7 +34,7 @@ export const getAllProduct = async () => {
     });
     return data;
   } catch (error) {
-    throw error;
+    return [];
   }
 };
 

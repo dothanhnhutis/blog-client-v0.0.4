@@ -24,7 +24,6 @@ export const queryPost = async (props: QueryPostType) => {
     );
     return data;
   } catch (error: any) {
-    console.log(error);
     return {
       posts: [],
       metadata: {

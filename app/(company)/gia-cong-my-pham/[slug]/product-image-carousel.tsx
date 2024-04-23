@@ -2,7 +2,6 @@
 import * as React from "react";
 import Image from "next/image";
 
-import { Card, CardContent } from "@/components/ui/card";
 import {
   Carousel,
   CarouselApi,
@@ -11,7 +10,6 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { AspectRatio } from "@radix-ui/react-aspect-ratio";
 import { cn } from "@/lib/utils";
 
 type ProductImageCarouselProps = {
@@ -44,20 +42,20 @@ export const ProductImageCarousel = ({ images }: ProductImageCarouselProps) => {
   return (
     <div className="flex flex-col gap-2">
       <Carousel setApi={setEmblaMainApi} className="w-full">
-        <CarouselContent>
+        <CarouselContent className="-ml-4">
           {images.map((image, index) => (
-            <CarouselItem key={index}>
-              <AspectRatio ratio={4 / 3} className="rounded-md overflow-hidden">
+            <CarouselItem key={index} className="pl-4">
+              <div className="bg-muted rounded-lg overflow-hidden">
                 <Image
                   alt=""
-                  className="object-cover"
+                  className="object-contain aspect-[4/3]"
                   priority
                   sizes="100vw"
                   width={800}
                   height={600}
                   src={image}
                 />
-              </AspectRatio>
+              </div>
             </CarouselItem>
           ))}
         </CarouselContent>

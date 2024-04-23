@@ -42,6 +42,7 @@ export async function generateMetadata({ params }: PostDetailPageProps) {
 
 const PostDetailPage = async ({ params }: PostDetailPageProps) => {
   const post = await getPostById(params.slug);
+
   if (!post || !post.isActive || !isPast(post.publishAt)) return notFound();
   return (
     <div className="mx-auto xl:max-w-screen-xl px-2">

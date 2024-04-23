@@ -1,74 +1,51 @@
 import React from "react";
 import Image from "next/image";
-import Image1 from "@/images/documents/giay-chung-nhan-du-dieu-kien-sx.png";
-import Image2 from "@/images/van-phong-ich.jpg";
 import Company1 from "@/images/company-1.jpg";
 import Company6 from "@/images/company-6.jpg";
-import Company9 from "@/images/company-9.jpg";
 import Company10 from "@/images/company-10.jpg";
 import HoiThaoTQ2023 from "@/images/hoi-thao-tq-2023.jpg";
 import iso from "@/images/documents/iso-2023-english.png";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
-import Categories from "./category";
-import { queryProduct } from "@/service/api/product";
-import { getAllCategory } from "@/service/api/category";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
-import PaginationH from "./pagination";
+import { ChevronsRightIcon } from "lucide-react";
+import { queryProduct } from "@/service/api/product";
 
-export const dynamic = "force-dymanic";
-export const dymanicParams = true;
-export const revalidate = 0;
-
-type ProductListPageProps = {
-  searchParams: {
-    tag?: string;
-    page?: string;
-  };
-};
-
-const ProductListPage = async ({ searchParams }: ProductListPageProps) => {
-  const { products, metadata } = await queryProduct(searchParams);
-  const categories = await getAllCategory();
-
+const ProductListPage = async () => {
+  const { products, metadata } = await queryProduct({ limit: "15" });
   return (
     <div className="lg:mx-auto lg:max-w-screen-xl">
       <div className="mt-2 mx-auto">
         <h1 className="text-xl font-semibold text-center">Danh Mục Sản Phẩm</h1>
       </div>
       <div className="mb-10">
-        <Categories categories={categories} />
         {products.length == 0 ? (
-          <p className="text-center h-[300px]">
-            Không tìm thấy sản phẩm nào khớp với lựa chọn của bạn.
-          </p>
+          <p className="text-center h-[300px]">Không tìm thấy sản phẩm nào</p>
         ) : (
           <>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 px-4">
               {products.map((product) => (
                 <Link
                   key={product.id}
-                  href={`/danh-muc-san-pham/${product.slug}`}
+                  href={`/gia-cong-my-pham/${product.slug}`}
                   className="rounded-lg overflow-hidden bg-accent"
                 >
-                  <AspectRatio ratio={16 / 9} className="max-h-[250px]">
+                  <div className="bg-muted rounded-lg overflow-hidden">
                     <Image
-                      src={product.thumnail}
-                      alt="thumnail"
-                      fill
-                      className="rounded-md object-cover"
+                      alt="image"
+                      className="object-contain aspect-[4/3]"
+                      priority
+                      sizes="100vw"
+                      width={800}
+                      height={600}
+                      src={product.image}
                     />
-                  </AspectRatio>
+                  </div>
                   <div className="flex flex-col gap-2 p-4">
                     <div className="flex items-center justify-between gap-3">
                       <Badge>
                         <p className="line-clamp-1">{product.category.name}</p>
                       </Badge>
-                      {/* <p className="text-sm line-clamp-1">
-                    {format(new Date(product.publishAt), "PP", {
-                      locale: vi,
-                    })}
-                  </p> */}
                     </div>
                     <h4 className="font-bold text-lg line-clamp-2 hover:text-primary">
                       {product.productName}
@@ -80,19 +57,19 @@ const ProductListPage = async ({ searchParams }: ProductListPageProps) => {
                 </Link>
               ))}
             </div>
-            {metadata.totalPage > 1 && (
-              <PaginationH
-                {...searchParams}
-                currentPage={parseInt(searchParams.page ?? "1")}
-                hasPrevPage={parseInt(searchParams.page ?? "1") > 1}
-                {...metadata}
-              />
+            {products.length > 20 && (
+              <div className="flex justify-center items-center">
+                <Link href="/gia-cong-my-pham" className="bg-primary">
+                  Xem Tất Cả
+                  <ChevronsRightIcon className="size-4" />
+                </Link>
+              </div>
             )}
           </>
         )}
       </div>
-      <section>
-        <div className="max-w-7xl mx-auto py-2 sm:pt-[30px] sm:pb-[60px]">
+      <section className="py-2 sm:pt-[30px] sm:pb-[60px]">
+        <div className="max-w-7xl mx-auto  bg-muted/40 shadow">
           <div className="sm:mx-5 mx-2 px-3 pt-5 pb-8 ">
             <h1 className="block text-center text-xl sm:text-2xl font-bold sm:mb-6 mb-3 text-blue-400">
               DỊCH VỤ GIA CÔNG MỸ PHẨM TRỌN GÓI

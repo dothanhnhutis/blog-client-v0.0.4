@@ -5,8 +5,6 @@ import { PopoverTrigger } from "@radix-ui/react-popover";
 import { Button } from "../ui/button";
 import { ImageIcon, PlusIcon, TableIcon } from "lucide-react";
 import { Editor } from "@tiptap/react";
-import { UploadPicture } from "../upload-picture";
-import { UploadImageTipTap } from "./upload-image";
 
 export const InsertAction = ({ editor }: { editor: Editor }) => {
   const [open, setOpen] = React.useState<boolean>(false);

@@ -1,5 +1,4 @@
 "use client";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
 import Image from "next/image";
 import { ProductImageCarousel } from "./product-image-carousel";
 type ProductImageWrapperProps = {
@@ -13,16 +12,17 @@ export const ProductImage = ({ images }: ProductImageWrapperProps) => {
   );
   if (images.length == 1) {
     children = (
-      <AspectRatio ratio={4 / 3} className="rounded-md overflow-hidden">
+      <div className="bg-muted rounded-lg overflow-hidden">
         <Image
           alt=""
+          className="object-contain aspect-[4/3]"
+          priority
+          sizes="100vw"
           width={800}
           height={600}
-          className="object-cover"
-          sizes="100vw"
           src={images[0]}
         />
-      </AspectRatio>
+      </div>
     );
   }
   if (images.length > 1) {

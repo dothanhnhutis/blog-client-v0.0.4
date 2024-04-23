@@ -81,8 +81,8 @@ export const NavMobile = () => {
           </AccordionItem>
           <AccordionItem value="item-3">
             <AccordionTrigger className="hover:no-underline">
-              <Link href="/tin-tuc" onClick={() => setOpen(false)}>
-                <p className="font-semibold">Tin tức</p>
+              <Link href="/bai-viet" onClick={() => setOpen(false)}>
+                <p className="font-semibold">Bài Viết</p>
               </Link>
             </AccordionTrigger>
             <AccordionContent>

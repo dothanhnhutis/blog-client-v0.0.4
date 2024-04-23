@@ -15,32 +15,32 @@ import { cn } from "@/lib/utils";
 const components: { title: string; href: string; description: string }[] = [
   {
     title: "Chăm Sóc Gia Đình",
-    href: "/",
+    href: "/gia-cong-my-pham?category=cham-soc-gia-dinh",
     description: "Danh mục sản phẩm giúp chăm sóc gia đình",
   },
   {
     title: "Chăm Sóc Cá Nhân",
-    href: "/",
+    href: "/gia-cong-my-pham?category=cham-soc-ca-nhan",
     description: "Danh mục sản phẩm chăm sóc cơ thể khử mùi",
   },
   {
     title: "Chăm Sóc Da",
-    href: "/",
+    href: "/gia-cong-my-pham?category=cham-soc-da",
     description: "Danh mục sản phẩm chăm sóc và dưỡng da",
   },
   {
     title: "Chăm Sóc Body",
-    href: "/",
+    href: "/gia-cong-my-pham?category=cham-soc-body",
     description: "Danh mục sản phẩm chăm sóc toàn thân",
   },
   {
     title: "Chăm Sóc Tóc",
-    href: "/",
+    href: "/gia-cong-my-pham?category=cham-soc-toc",
     description: "Danh mục sản phẩm bảo vệ và phục hồi tóc",
   },
   {
     title: "Nước Hoa",
-    href: "/",
+    href: "/gia-cong-my-pham?category=nuoc-hoa",
     description: "Danh mục sản phẩm tạo hương thơm phòng và cơ thể",
   },
 ];
@@ -55,12 +55,7 @@ export const NavDesktop = () => {
           >
             Giới thiệu về ICH
           </Link>
-          {/* <Link
-            href="/gia-cong-my-pham"
-            className="inline-flex items-center justify-center px-4 py-2 flex-shrink-0 font-bold"
-          >
-            Gia Công Mỹ Phẩm
-          </Link> */}
+
           <NavigationMenu>
             <NavigationMenuList>
               <NavigationMenuItem>
