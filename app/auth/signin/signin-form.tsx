@@ -14,6 +14,7 @@ import FormError from "../form-error";
 import { cn } from "@/lib/utils";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 import { FetchHttpError, http } from "@/service/http";
+import configs from "@/config";
 
 const SignInForm = () => {
   const router = useRouter();
@@ -35,7 +36,7 @@ const SignInForm = () => {
     startTransistion(async () => {
       try {
         await http.post<SignInResType>("/api/auth/signin", form, {
-          baseUrl: process.env.NEXT_PUBLIC_CLIENT_URL,
+          baseUrl: configs.NEXT_PUBLIC_CLIENT_URL,
         });
         router.push(DEFAULT_LOGIN_REDIRECT);
       } catch (error) {

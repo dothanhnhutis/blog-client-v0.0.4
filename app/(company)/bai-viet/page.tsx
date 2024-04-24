@@ -5,14 +5,13 @@ import Image from "next/image";
 
 import Tags from "./tags";
 import Link from "next/link";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 import PaginationH from "./pagination";
 import { vi } from "date-fns/locale";
 
 // export const dynamic = "force-dymanic";
-// export const dymanicParams = false;
+// export const dymanicParams = true;
 // export const revalidate = 0;
 
 type PostListPageProps = {

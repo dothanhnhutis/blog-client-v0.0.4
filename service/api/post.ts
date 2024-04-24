@@ -43,7 +43,6 @@ export const getPostById = async (id: string) => {
     });
     return data;
   } catch (error: any) {
-    console.log(error);
     return undefined;
   }
 };

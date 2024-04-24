@@ -7,6 +7,7 @@ import {
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import configs from "./config";
 
 export function middleware(request: NextRequest) {
   const { nextUrl } = request;
@@ -33,7 +34,7 @@ export function middleware(request: NextRequest) {
 
   if (isLoggedIn) {
     if (nextUrl.pathname.startsWith("/auth/signout")) {
-      fetch(`${process.env.SERVER_PUBLIC_URL}/auth/signout`, {
+      fetch(`${configs.NEXT_PUBLIC_SERVER_URL}/auth/signout`, {
         method: "GET",
         headers: {
           Cookie: cookies().toString(),

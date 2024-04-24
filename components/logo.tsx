@@ -16,6 +16,7 @@ export const Logo = ({ className }: { className?: string }) => {
             width={LogoImg.width}
             height={LogoImg.height}
             alt="logo"
+            title="logo-ich"
           />
         </AspectRatio>
       </div>

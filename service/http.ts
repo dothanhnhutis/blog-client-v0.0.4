@@ -1,3 +1,5 @@
+import configs from "@/config";
+
 type FetchHttpOption = RequestInit & {
   baseUrl?: string;
 };
@@ -43,7 +45,7 @@ async function fetchHttp<ResponseData>(
   const baseHeaders = {
     "Content-Type": "application/json",
   };
-  const baseUrl = options?.baseUrl || process.env.NEXT_PUBLIC_SERVER_URL;
+  const baseUrl = options?.baseUrl || configs.NEXT_PUBLIC_SERVER_URL;
   const fullUrl = url.startsWith("/")
     ? `${baseUrl}${url}`
     : `${baseUrl}/${url}`;

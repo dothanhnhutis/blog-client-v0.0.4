@@ -1,4 +1,4 @@
-import React from "react";
+import React, { cache } from "react";
 import Link from "next/link";
 import {
   CalendarIcon,
@@ -9,36 +9,81 @@ import {
 import { notFound } from "next/navigation";
 import { format, isPast } from "date-fns";
 import { getPostById } from "@/service/api/post";
+import { Metadata, ResolvingMetadata } from "next";
+import { baseOpenGraph } from "@/app/shared-metadata";
+import configs from "@/config";
 
 type PostDetailPageProps = {
   params: { slug: string };
 };
-export async function generateMetadata({ params }: PostDetailPageProps) {
-  try {
-    const post = await getPostById(params.slug);
-    if (!post || !post.isActive || !isPast(post.publishAt))
-      return {
-        title: "Not Found",
-        description: "The page you are looking for does not exist.",
-      };
-    return {
-      title: post.title,
-      description: post.contentText,
-      alternates: {
-        canonical: `/bai-viet/${post.slug}`,
-        // languages: {
-        //   "en-US": `/en-US/bai-viet/${post.slug}`,
-        //   "de-DE": `/de-DE/bai-viet/${post.slug}`,
-        // },
-      },
-    };
-  } catch (error) {
+
+export async function generateMetadata(
+  { params }: PostDetailPageProps,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const post = await getPostById(params.slug);
+  if (!post)
     return {
       title: "Not Found",
       description: "The page you are looking for does not exist.",
     };
-  }
+  const url = configs.NEXT_PUBLIC_CLIENT_URL + "/bai-viet/" + post.slug;
+  return {
+    title: post.title,
+    description: post.contentText,
+    alternates: {
+      canonical: url,
+      // languages: {
+      //   "en-US": "/en-US",
+      //   "de-DE": "/de-DE",
+      // },
+    },
+    openGraph: {
+      ...baseOpenGraph,
+      title: post.title,
+      description: post.contentText,
+      url,
+      siteName: "Công ty TNHH MTV TM Sản Xuất I.C.H",
+      images: [
+        {
+          url: post.image,
+          // width: 800,
+          // height: 600,
+        },
+      ],
+    },
+  };
 }
+
+// type PostDetailPageProps = {
+//   params: { slug: string };
+// };
+// export async function generateMetadata({ params }: PostDetailPageProps) {
+//   try {
+//     const post = await getPostById(params.slug);
+//     if (!post || !post.isActive || !isPast(post.publishAt))
+//       return {
+//         title: "Not Found",
+//         description: "The page you are looking for does not exist.",
+//       };
+//     return {
+//       title: post.title,
+//       description: post.contentText,
+//       alternates: {
+//         canonical: `/bai-viet/${post.slug}`,
+//         // languages: {
+//         //   "en-US": `/en-US/bai-viet/${post.slug}`,
+//         //   "de-DE": `/de-DE/bai-viet/${post.slug}`,
+//         // },
+//       },
+//     };
+//   } catch (error) {
+//     return {
+//       title: "Not Found",
+//       description: "The page you are looking for does not exist.",
+//     };
+//   }
+// }
 
 const PostDetailPage = async ({ params }: PostDetailPageProps) => {
   const post = await getPostById(params.slug);

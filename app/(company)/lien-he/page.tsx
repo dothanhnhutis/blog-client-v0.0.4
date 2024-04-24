@@ -3,12 +3,13 @@ import { MdMail } from "react-icons/md";
 import { GoogleMapsEmbed } from "@next/third-parties/google";
 import Link from "next/link";
 import { ContactForm } from "../contact-form";
+import configs from "@/config";
 
 const Contact = () => {
   return (
     <section className="bg-muted/40">
       <GoogleMapsEmbed
-        apiKey={process.env.NEXT_PUBLIC_GOOGLE_MAP_KEY!}
+        apiKey={configs.NEXT_PUBLIC_GOOGLE_MAP_KEY!}
         height={500}
         width="100%"
         zoom="17"

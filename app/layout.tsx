@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { Toaster } from "@/components/ui/sonner";
+import { baseOpenGraph } from "./shared-metadata";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -13,9 +14,7 @@ export const metadata: Metadata = {
     template: "%s | Công ty TNHH MTV TM Sản Xuất I.C.H",
   },
   description: "Công ty TNHH MTV TM Sản Xuất I.C.H",
-  // verification: {
-  //   google: "google-site-verification=123123"
-  // }
+  openGraph: baseOpenGraph,
 };
 
 export default function RootLayout({

@@ -36,18 +36,8 @@ import TagInput from "./tag-input";
 import { Category } from "@/schemas/category";
 import { CategoryDialog } from "./category-modal";
 import TiptapEditor from "@/components/tiptap-editor";
-import { User } from "@/schemas/user";
 import { createProduct, editProduct } from "@/service/api/product";
 import { UploadImage } from "@/components/upload-image";
-
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
 
 import Box1 from "@/images/icons/box1.png";
 import Box2 from "@/images/icons/box2.png";
@@ -59,6 +49,7 @@ import Box7 from "@/images/icons/box7.png";
 import Box8 from "@/images/icons/box8.png";
 import Link from "next/link";
 import { isEqual, omit } from "lodash";
+import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 
 const imageUploads: IProductImageBox[] = [
   { icon: Box1.src, alt: "Primary image", name: "Primary" },
@@ -307,7 +298,7 @@ export const ProductForm = ({ categories, product }: ProductFormProps) => {
           product.`}
               </p>
 
-              <div className="grid w-full grid-cols-3 sm:grid-cols-6 lg:grid-cols-3 gap-3 mt-4 ">
+              <div className="grid w-full grid-cols-3 sm:grid-cols-6 lg:grid-cols-3 gap-3 mt-4">
                 <div className="aspect-square size-full sm:first:col-span-2 sm:first:row-span-2 overflow-hidden">
                   {form.images[0] ? (
                     <div className="relative group overflow-hidden border rounded-md">
