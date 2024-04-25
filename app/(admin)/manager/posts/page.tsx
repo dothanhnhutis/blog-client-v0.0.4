@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import React from "react";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -13,16 +13,12 @@ import { getAllAuthor, getCurrentUser } from "@/service/api/user";
 import DataTable from "./data-table";
 import { getAllPost } from "@/service/api/post";
 import { getAllTag } from "@/service/api/tag";
-import { Loading } from "@/components/loading";
-
+export const dynamic = "force-dynamic";
 const UserManagerPage = async () => {
-  const [authors, currentUser, posts, tags] = await Promise.all([
-    getAllAuthor(),
-    getCurrentUser(),
-    getAllPost(),
-    getAllTag(),
-  ]);
-
+  const authors = await getAllAuthor();
+  const currentUser = await getCurrentUser();
+  const posts = await getAllPost();
+  const tags = await getAllTag();
   return (
     <div className="w-full xl:max-w-screen-xl xl:mx-auto p-4 overflow-hidden">
       <Breadcrumb>

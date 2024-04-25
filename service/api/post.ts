@@ -15,12 +15,7 @@ type QueryPostType = {
 export const queryPost = async (props: QueryPostType) => {
   try {
     const { data } = await http.get<PostQuery>(
-      "/posts/query" + generateQuery(props),
-      {
-        headers: {
-          Cookie: cookiesServer(cookies().getAll()),
-        },
-      }
+      "/posts/query" + generateQuery(props)
     );
     return data;
   } catch (error: any) {
@@ -36,11 +31,7 @@ export const queryPost = async (props: QueryPostType) => {
 
 export const getPostById = async (id: string) => {
   try {
-    const { data } = await http.get<Post>("/posts/" + id, {
-      headers: {
-        Cookie: cookiesServer(cookies().getAll()),
-      },
-    });
+    const { data } = await http.get<Post>("/posts/" + id);
     return data;
   } catch (error: any) {
     return undefined;
@@ -49,9 +40,11 @@ export const getPostById = async (id: string) => {
 
 export const getAllPost = async () => {
   try {
+    const allCookies = cookies().getAll();
+
     const { data } = await http.get<Post[]>("/posts", {
       headers: {
-        Cookie: cookiesServer(cookies().getAll()),
+        Cookie: cookiesServer(allCookies),
       },
     });
     return data;
@@ -63,9 +56,10 @@ export const getAllPost = async () => {
 
 export const editPost = async (id: string, data: Partial<PostFormPayload>) => {
   try {
+    const allCookies = cookies().getAll();
     const res = await http.patch<{ message: string }>("/posts/" + id, data, {
       headers: {
-        Cookie: cookiesServer(cookies().getAll()),
+        Cookie: cookiesServer(allCookies),
       },
     });
     revalidatePath("/manager/posts");
@@ -91,9 +85,10 @@ export const editPost = async (id: string, data: Partial<PostFormPayload>) => {
 
 export const createPost = async (data: PostFormPayload) => {
   try {
+    const allCookies = cookies().getAll();
     const res = await http.post<{ message: string }>("/posts", data, {
       headers: {
-        Cookie: cookiesServer(cookies().getAll()),
+        Cookie: cookiesServer(allCookies),
       },
     });
     revalidatePath("/manager/posts");

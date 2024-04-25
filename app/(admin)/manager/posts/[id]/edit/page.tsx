@@ -11,12 +11,10 @@ type EditPostPageProps = {
 };
 
 const EditPostPage = async ({ params: { id } }: EditPostPageProps) => {
-  const [post, currentUser, tags, authors] = await Promise.all([
-    getPostById(id),
-    getCurrentUser(),
-    getAllTag(),
-    getAllAuthor(),
-  ]);
+  const post = await getPostById(id);
+  const currentUser = await getCurrentUser();
+  const tags = await getAllTag();
+  const authors = await getAllAuthor();
 
   if (!post) notFound();
   return (

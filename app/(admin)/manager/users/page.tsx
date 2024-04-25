@@ -1,4 +1,4 @@
-import React, { Suspense } from "react";
+import React from "react";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -13,10 +13,8 @@ import { getAllUser, getCurrentUser } from "@/service/api/user";
 import DataTable from "./data-table";
 
 const UserManagerPage = async () => {
-  const [users, currentUser] = await Promise.all([
-    getAllUser(),
-    getCurrentUser(),
-  ]);
+  const currentUser = await getCurrentUser();
+  const users = await getAllUser();
 
   return (
     <div className="w-full xl:max-w-screen-xl xl:mx-auto p-4 overflow-hidden">

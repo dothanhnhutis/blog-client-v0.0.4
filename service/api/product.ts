@@ -14,11 +14,7 @@ type QueryProductType = {
 
 export const getProductByIdOrSlug = async (slug: string) => {
   try {
-    const { data } = await http.get<Product | null>("/products/" + slug, {
-      headers: {
-        Cookie: cookiesServer(cookies().getAll()),
-      },
-    });
+    const { data } = await http.get<Product | null>("/products/" + slug);
     return data;
   } catch (error) {
     return undefined;
@@ -27,9 +23,10 @@ export const getProductByIdOrSlug = async (slug: string) => {
 
 export const getAllProduct = async () => {
   try {
+    const allCookies = cookies().getAll();
     const { data } = await http.get<Product[]>("/products", {
       headers: {
-        Cookie: cookiesServer(cookies().getAll()),
+        Cookie: cookiesServer(allCookies),
       },
     });
     return data;
@@ -41,12 +38,7 @@ export const getAllProduct = async () => {
 export const queryProduct = async (props: QueryProductType) => {
   try {
     const { data } = await http.get<ProductQuery>(
-      "/products/query" + generateQuery(props),
-      {
-        headers: {
-          Cookie: cookiesServer(cookies().getAll()),
-        },
-      }
+      "/products/query" + generateQuery(props)
     );
     return data;
   } catch (error) {
@@ -62,9 +54,10 @@ export const queryProduct = async (props: QueryProductType) => {
 
 export const createProduct = async (data: ProductFormPayload) => {
   try {
+    const allCookies = cookies().getAll();
     const res = await http.post<{ message: string }>("/products", data, {
       headers: {
-        Cookie: cookiesServer(cookies().getAll()),
+        Cookie: cookiesServer(allCookies),
       },
     });
     revalidatePath("/manager/products");
@@ -89,9 +82,10 @@ export const createProduct = async (data: ProductFormPayload) => {
 
 export const editProduct = async (id: string, data: ProductFormPayload) => {
   try {
+    const allCookies = cookies().getAll();
     const res = await http.patch<{ message: string }>("/products/" + id, data, {
       headers: {
-        Cookie: cookiesServer(cookies().getAll()),
+        Cookie: cookiesServer(allCookies),
       },
     });
     revalidatePath("/manager/products");

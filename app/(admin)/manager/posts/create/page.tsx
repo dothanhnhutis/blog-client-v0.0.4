@@ -4,11 +4,9 @@ import { getAllTag } from "@/service/api/tag";
 import { PostForm } from "../post-form";
 
 const CreatePostPage = async () => {
-  const [authors, currentUser, tags] = await Promise.all([
-    getAllAuthor(),
-    getCurrentUser(),
-    getAllTag(),
-  ]);
+  const authors = await getAllAuthor();
+  const currentUser = await getCurrentUser();
+  const tags = await getAllTag();
 
   return <PostForm authors={authors} currentUser={currentUser!} tags={tags} />;
 };

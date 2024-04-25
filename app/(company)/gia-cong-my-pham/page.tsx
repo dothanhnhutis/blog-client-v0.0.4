@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
@@ -8,14 +8,15 @@ import { getAllCategory } from "@/service/api/category";
 import { Badge } from "@/components/ui/badge";
 import PaginationH from "./pagination";
 
-// export const dynamic = "force-dymanic";
-// export const dymanicParams = true;
-// export const revalidate = 0;
+export const dynamic = "force-dynamic";
+export const dynamicParams = true;
+export const revalidate = 0;
 
 type ProductListPageProps = {
   searchParams: {
     tag?: string;
     page?: string;
+    limit?: string;
   };
 };
 
@@ -30,7 +31,9 @@ const ServicesPage = async ({ searchParams }: ProductListPageProps) => {
         </h1>
       </div>
       <div className="mb-10">
-        <Categories categories={categories} />
+        <Suspense>
+          <Categories categories={categories} />
+        </Suspense>
         {products.length == 0 ? (
           <p className="text-center h-[300px]">
             Không tìm thấy sản phẩm nào khớp với lựa chọn của bạn.

@@ -8,10 +8,9 @@ type EditProductPageProps = {
   params: { id: string };
 };
 const EditProductPage = async ({ params }: EditProductPageProps) => {
-  const [categories, product] = await Promise.all([
-    getAllCategory(),
-    getProductByIdOrSlug(params.id),
-  ]);
+  const categories = await getAllCategory();
+  const product = await getProductByIdOrSlug(params.id);
+
   if (!product) notFound();
   return (
     <ProductForm

@@ -13,9 +13,10 @@ import { redirect } from "next/navigation";
 
 export async function getCurrentUser() {
   try {
+    const allCookies = cookies().getAll();
     const res = await http.get<User>("/users/me", {
       headers: {
-        Cookie: cookiesServer(cookies().getAll()),
+        Cookie: cookiesServer(allCookies),
       },
     });
     return res.data;
@@ -27,9 +28,10 @@ export async function getCurrentUser() {
 
 export const getAllUser = async () => {
   try {
+    const allCookies = cookies().getAll();
     const res = await http.get<User[]>("/users", {
       headers: {
-        Cookie: cookiesServer(cookies().getAll()),
+        Cookie: cookiesServer(allCookies),
       },
     });
     return res.data;
@@ -41,9 +43,10 @@ export const getAllUser = async () => {
 
 export const createUser = async (data: CreateUserType) => {
   try {
+    const allCookies = cookies().getAll();
     const res = await http.post<{ message: string }>("/users", data, {
       headers: {
-        Cookie: cookiesServer(cookies().getAll()),
+        Cookie: cookiesServer(allCookies),
       },
     });
     revalidatePath("/manager/users");
@@ -68,9 +71,10 @@ export const createUser = async (data: CreateUserType) => {
 
 export const getUserById = async (id: string) => {
   try {
+    const allCookies = cookies().getAll();
     const res = await http.get<User>("/users/" + id, {
       headers: {
-        Cookie: cookiesServer(cookies().getAll()),
+        Cookie: cookiesServer(allCookies),
       },
     });
     return res.data;
@@ -82,9 +86,10 @@ export const getUserById = async (id: string) => {
 
 export const editUserById = async (id: string, data: EditUserType) => {
   try {
+    const allCookies = cookies().getAll();
     const res = await http.patch<{ message: string }>("/users/" + id, data, {
       headers: {
-        Cookie: cookiesServer(cookies().getAll()),
+        Cookie: cookiesServer(allCookies),
       },
     });
     revalidatePath("/manager/users");
@@ -108,10 +113,12 @@ export const editUserById = async (id: string, data: EditUserType) => {
 };
 
 export const getAllAuthor = async () => {
+  const allCookies = cookies().getAll();
+
   try {
     const { data } = await http.get<User[]>("/users/authors", {
       headers: {
-        Cookie: cookiesServer(cookies().getAll()),
+        Cookie: cookiesServer(allCookies),
       },
     });
     return data;
@@ -123,9 +130,10 @@ export const getAllAuthor = async () => {
 
 export const editProfile = async (data: EditProfile) => {
   try {
+    const allCookies = cookies().getAll();
     const res = await http.patch<{ message: string }>("/users", data, {
       headers: {
-        Cookie: cookiesServer(cookies().getAll()),
+        Cookie: cookiesServer(allCookies),
       },
     });
     revalidatePath("/account/profile");

@@ -1,6 +1,6 @@
 import { queryPost } from "@/service/api/post";
 import { getAllTag } from "@/service/api/tag";
-import React from "react";
+import React, { Suspense } from "react";
 import Image from "next/image";
 
 import Tags from "./tags";
@@ -10,9 +10,9 @@ import { format } from "date-fns";
 import PaginationH from "./pagination";
 import { vi } from "date-fns/locale";
 
-// export const dynamic = "force-dymanic";
-// export const dymanicParams = true;
-// export const revalidate = 0;
+export const dynamic = "force-dynamic";
+export const dynamicParams = true;
+export const revalidate = 0;
 
 type PostListPageProps = {
   searchParams: {
@@ -30,7 +30,9 @@ const PostListPage = async ({ searchParams }: PostListPageProps) => {
         <h1 className="text-xl font-semibold text-center">Bài Viết</h1>
       </div>
       <div className="mb-10">
-        <Tags tags={tags} />
+        <Suspense>
+          <Tags tags={tags} />
+        </Suspense>
         {posts.length == 0 ? (
           <p className="text-center h-[500px]">
             Không tìm thấy bài viết nào khớp với lựa chọn của bạn.

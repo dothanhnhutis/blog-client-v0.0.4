@@ -7,11 +7,7 @@ import { cookies } from "next/headers";
 
 export const getAllCategory = async () => {
   try {
-    const { data } = await http.get<Category[]>("/categories", {
-      headers: {
-        Cookie: cookiesServer(cookies().getAll()),
-      },
-    });
+    const { data } = await http.get<Category[]>("/categories");
     return data;
   } catch (error) {
     return [];
@@ -23,12 +19,13 @@ export const editCategory = async (
   data: { name: string; slug: string }
 ) => {
   try {
+    const allCookies = cookies().getAll();
     const res = await http.patch<{ message: string }>(
       "/categories/" + id,
       data,
       {
         headers: {
-          Cookie: cookiesServer(cookies().getAll()),
+          Cookie: cookiesServer(allCookies),
         },
       }
     );
@@ -54,9 +51,10 @@ export const editCategory = async (
 
 export const createCategory = async (data: { name: string; slug: string }) => {
   try {
+    const allCookies = cookies().getAll();
     const res = await http.post<MutationCategoryResponse>("/categories", data, {
       headers: {
-        Cookie: cookiesServer(cookies().getAll()),
+        Cookie: cookiesServer(allCookies),
       },
     });
     revalidatePath("/manager/products");
@@ -81,11 +79,12 @@ export const createCategory = async (data: { name: string; slug: string }) => {
 
 export const deleteCategory = async (id: string) => {
   try {
+    const allCookies = cookies().getAll();
     const res = await http.delete<MutationCategoryResponse>(
       "/categories/" + id,
       {
         headers: {
-          Cookie: cookiesServer(cookies().getAll()),
+          Cookie: cookiesServer(allCookies),
         },
       }
     );

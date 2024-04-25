@@ -7,11 +7,7 @@ import { revalidatePath } from "next/cache";
 
 export const getAllTag = async () => {
   try {
-    const { data } = await http.get<Tag[]>("/tags", {
-      headers: {
-        Cookie: cookiesServer(cookies().getAll()),
-      },
-    });
+    const { data } = await http.get<Tag[]>("/tags");
     return data;
   } catch (error: any) {
     return [];
@@ -23,9 +19,10 @@ export const editTag = async (
   data: { name: string; slug: string }
 ) => {
   try {
+    const allCookies = cookies().getAll();
     const res = await http.patch<MutationTagResponse>("/tags/" + id, data, {
       headers: {
-        Cookie: cookiesServer(cookies().getAll()),
+        Cookie: cookiesServer(allCookies),
       },
     });
     revalidatePath("/manager/posts");
@@ -50,9 +47,10 @@ export const editTag = async (
 
 export const createTag = async (data: { name: string; slug: string }) => {
   try {
+    const allCookies = cookies().getAll();
     const res = await http.post<{ message: string }>("/tags", data, {
       headers: {
-        Cookie: cookiesServer(cookies().getAll()),
+        Cookie: cookiesServer(allCookies),
       },
     });
     revalidatePath("/manager/posts");
@@ -77,9 +75,10 @@ export const createTag = async (data: { name: string; slug: string }) => {
 
 export const deleteTag = async (id: string) => {
   try {
+    const allCookies = cookies().getAll();
     const res = await http.delete<{ message: string }>("/tags/" + id, {
       headers: {
-        Cookie: cookiesServer(cookies().getAll()),
+        Cookie: cookiesServer(allCookies),
       },
     });
     revalidatePath("/manager/posts");

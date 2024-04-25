@@ -15,11 +15,9 @@ import { getAllCategory } from "@/service/api/category";
 import SiderBarComponent from "@/components/sidebar-component";
 
 const ProductPage = async () => {
-  const [products, categories, currentUser] = await Promise.all([
-    getAllProduct(),
-    getAllCategory(),
-    getCurrentUser(),
-  ]);
+  const products = await getAllProduct();
+  const categories = await getAllCategory();
+  const currentUser = await getCurrentUser();
 
   return (
     <div className="relative flex">
