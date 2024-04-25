@@ -15,7 +15,7 @@ import {
 import { MdBiotech, MdOutlineFactory } from "react-icons/md";
 import { FaUsers } from "react-icons/fa6";
 
-import { ThumnailCarousel } from "./thumnail-carousel";
+import { CarouselBanner } from "./banner-carousel";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 
 import { Button } from "@/components/ui/button";
@@ -60,7 +60,7 @@ export default function Home() {
   return (
     <main>
       <section className="lg:mx-auto lg:max-w-screen-xl">
-        <ThumnailCarousel />
+        <CarouselBanner />
       </section>
       <section className="lg:mx-auto lg:max-w-screen-xl flex flex-col items-center my-10">
         <div className="flex flex-col max-w-md text-center sm:space-y-4 space-y-2">
