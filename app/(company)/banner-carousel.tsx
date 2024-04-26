@@ -13,6 +13,7 @@ import { AspectRatio } from "@/components/ui/aspect-ratio";
 
 import olloy from "@/images/banners/olloy-banner.jpg";
 import perfume from "@/images/banners/perfume-banner.jpg";
+import soap from "@/images/banners/soap-banner.jpg";
 
 export const CarouselBanner = () => {
   const plugin = React.useRef(
@@ -28,6 +29,18 @@ export const CarouselBanner = () => {
       onMouseLeave={plugin.current.play}
     >
       <CarouselContent className="-ml-4">
+        <CarouselItem className="pl-4">
+          <AspectRatio ratio={1280 / 440}>
+            <Image
+              priority
+              alt={`soap`}
+              src={soap.src}
+              className="object-cover"
+              width={2560}
+              height={880}
+            />
+          </AspectRatio>
+        </CarouselItem>
         <CarouselItem className="pl-4">
           <AspectRatio ratio={1280 / 440}>
             <Image

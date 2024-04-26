@@ -45,7 +45,8 @@ async function fetchHttp<ResponseData>(
   const baseHeaders = {
     "Content-Type": "application/json",
   };
-  const baseUrl = options?.baseUrl || configs.NEXT_PUBLIC_SERVER_URL;
+  const baseUrl =
+    options?.baseUrl || configs.NEXT_PUBLIC_SERVER_URL + "/api/v1";
   const fullUrl = url.startsWith("/")
     ? `${baseUrl}${url}`
     : `${baseUrl}/${url}`;

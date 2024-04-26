@@ -18,7 +18,7 @@ export const UserMenu = async () => {
   const currentUser = await getCurrentUser();
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="outline-none ">
+      <DropdownMenuTrigger className="outline-none">
         <Avatar>
           <AvatarImage src={currentUser?.avatarUrl ?? AvatarDefault.src} />
           <AvatarFallback className="bg-transparent">
