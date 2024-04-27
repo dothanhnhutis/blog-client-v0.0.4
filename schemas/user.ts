@@ -2,6 +2,7 @@ import { z } from "zod";
 export const roles = [
   "ADMIN",
   "MANAGER",
+  "SALER",
   // "Accountance",
   // "ResearchAndDevelopment",
   // "Paperworker",

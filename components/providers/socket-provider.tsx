@@ -3,26 +3,27 @@ import configs from "@/config";
 import { Contact } from "@/schemas/contact";
 import React from "react";
 import { createContext } from "react";
-import { io } from "socket.io-client";
+import { io, Socket as SocketClient } from "socket.io-client";
 import crypto from "crypto-js";
 
 type SocketContext = {
-  notifications: Contact[];
+  socket?: SocketClient;
   sessionID: string;
 };
 
 const initData: SocketContext = {
-  notifications: [],
   sessionID: "",
 };
 
 const socketContext = createContext(initData);
+
 const isSSR = typeof window === "undefined";
 
 export const useSocket = () => {
   const socketData = React.useContext(socketContext);
   return socketData;
 };
+
 export function SocketProvider({ children }: { children: React.ReactNode }) {
   const [data, setData] = React.useState<SocketContext>(() => {
     if (!isSSR) {
@@ -32,6 +33,7 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
       window.localStorage.setItem("sessionId", sessionID);
       initData.sessionID = sessionID;
     }
+
     return initData;
   });
 
@@ -41,16 +43,14 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
       secure: true,
     });
 
-    socket.on("connect", () => {
-      console.log(`Connected to server`);
-    });
+    setData((prev) => ({ ...prev, socket }));
 
-    socket.on("contact", (data: Contact) => {
-      setData((prev) => ({
-        ...prev,
-        notifications: [...prev.notifications, data],
-      }));
-    });
+    // socket.on("contact", (data: Contact) => {
+    //   // setData((prev) => ({
+    //   //   ...prev,
+    //   //   notifications: [data, ...prev.notifications],
+    //   // }));
+    // });
 
     socket.on("disconnect", () => {
       console.log(`Disconnected from server`);

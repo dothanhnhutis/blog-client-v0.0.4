@@ -9,7 +9,7 @@ import { UserMenu } from "@/components/user-menu";
 const AccountLayout = async ({ children }: { children: React.ReactNode }) => {
   return (
     <main>
-      <header className="backdrop-saturate-[1.8] sticky top-0 z-50 border-b backdrop-blur bg-background/60">
+      {/* <header className="backdrop-saturate-[1.8] sticky top-0 z-50 border-b backdrop-blur bg-background/60">
         <nav className="flex justify-between items-center p-2 pr-4 h-[72px]">
           <Logo className="hidden md:block" />
           <div className="hidden md:flex items-center space-x-6 ml-6 text-sm font-medium">
@@ -38,7 +38,7 @@ const AccountLayout = async ({ children }: { children: React.ReactNode }) => {
             <UserMenu />
           </div>
         </nav>
-      </header>
+      </header> */}
       <div className="relative flex bg-muted/50">{children}</div>
     </main>
   );

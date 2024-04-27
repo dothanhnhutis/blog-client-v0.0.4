@@ -10,6 +10,17 @@ export const createContactValidation = z
       required_error: "name field is required",
       invalid_type_error: "name field must be string",
     }),
+    isReaded: z
+      .boolean({
+        invalid_type_error: "isReaded field must be boolean",
+      })
+      .default(false),
+    isDeleted: z
+      .boolean({
+        invalid_type_error: "isDeleted field must be boolean",
+      })
+      .default(false),
+    contactType: z.enum(["BASE", "ARCHIVE", "JUNK"]).default("BASE"),
     email: z
       .string({
         required_error: "email field is required",
@@ -35,4 +46,15 @@ export type Contact = CreateContact & {
   id: string;
   createdAt: string;
   updatedAt: string;
+};
+
+export type QueryContact = {
+  isReaded?: string | undefined;
+  contactType?: string | undefined;
+  isDeleted?: string | undefined;
+};
+export type EditContact = {
+  isReaded?: boolean | undefined;
+  isDeleted?: boolean | undefined;
+  contactType?: "BASE" | "ARCHIVE" | "JUNK" | undefined;
 };

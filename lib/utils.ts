@@ -20,7 +20,7 @@ export async function awaitCustom(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-export function generateQuery(query: Record<string, string>) {
+export function generateQuery(query?: Record<string, string>) {
   return isEmpty(query) ? "" : "?" + new URLSearchParams(query).toString();
 }
 

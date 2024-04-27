@@ -22,10 +22,10 @@ const ManagerLayout = ({ children }: { children: React.ReactNode }) => {
             </Link>
             <Link
               prefetch={false}
-              href="/mail"
+              href="/contact"
               className="transition-colors hover:text-foreground/80 text-foreground/60"
             >
-              Mail
+              Contact
             </Link>
           </div>
           <Button variant="ghost" className="md:hidden">
