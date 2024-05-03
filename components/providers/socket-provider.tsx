@@ -45,13 +45,6 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
 
     setData((prev) => ({ ...prev, socket }));
 
-    // socket.on("contact", (data: Contact) => {
-    //   // setData((prev) => ({
-    //   //   ...prev,
-    //   //   notifications: [data, ...prev.notifications],
-    //   // }));
-    // });
-
     socket.on("disconnect", () => {
       console.log(`Disconnected from server`);
     });
