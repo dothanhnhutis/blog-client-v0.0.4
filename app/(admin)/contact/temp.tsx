@@ -60,9 +60,6 @@ const ContactPage = () => {
       socket.on("contact", (data: Contact) => {
         setContacts((prev) => [data, ...prev]);
       });
-    return () => {
-      if (socket) socket?.off("contact");
-    };
   }, [socket]);
 
   const handleActionContact = async (id: string, data: EditContact) => {

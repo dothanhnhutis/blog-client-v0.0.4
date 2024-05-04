@@ -1,7 +1,7 @@
 "use client";
 import configs from "@/config";
 import { Contact } from "@/schemas/contact";
-import React from "react";
+import React, { useRef, useState } from "react";
 import { createContext } from "react";
 import { io, Socket as SocketClient } from "socket.io-client";
 import crypto from "crypto-js";
@@ -25,6 +25,8 @@ export const useSocket = () => {
 };
 
 export function SocketProvider({ children }: { children: React.ReactNode }) {
+  const [isConnected, setConnected] = useState(false);
+
   const [data, setData] = React.useState<SocketContext>(() => {
     if (!isSSR) {
       const sessionID =
@@ -36,20 +38,33 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
 
     return initData;
   });
+  const socketRef = useRef(null);
 
   React.useEffect(() => {
-    const socket = io(configs.NEXT_PUBLIC_SERVER_URL, {
-      transports: ["websocket", "polling"],
-      secure: true,
-    });
+    if (!isConnected) {
+      socketRef.current = io(configs.NEXT_PUBLIC_SERVER_URL, {
+        transports: ["websocket", "polling"],
+        secure: true,
+      });
+    }
 
-    setData((prev) => ({ ...prev, socket }));
+    // socket.on("connect", () => {
+    //   console.log(`connect from server: ${socket.id}`);
+    // });
 
-    socket.on("disconnect", () => {
-      console.log(`Disconnected from server`);
-    });
+    // socket.on("contact", (data: Contact) => {
+    //   console.log(data);
+    // });
+
+    // setData((prev) => ({ ...prev, socket }));
+
+    // socket.on("disconnect", () => {
+    //   console.log(`Disconnected from server`);
+    // });
     return () => {
-      socket.disconnect();
+      if (socketRef.current && socketRef.current) {
+        socketRef.current.disconnect();
+      }
     };
   }, []);
 
