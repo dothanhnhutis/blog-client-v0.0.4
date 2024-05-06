@@ -2,9 +2,9 @@ import { z } from "zod";
 
 export const createContactValidation = z
   .object({
-    sessionId: z.string({
-      required_error: "sessionId field is required",
-      invalid_type_error: "sessionId field must be string",
+    requestId: z.string({
+      required_error: "requestId field is required",
+      invalid_type_error: "requestId field must be string",
     }),
     name: z.string({
       required_error: "name field is required",
@@ -14,10 +14,12 @@ export const createContactValidation = z
       .boolean({
         invalid_type_error: "isReaded field must be boolean",
       })
-      .default(false),
+      .default(false)
+      .optional(),
     contactTag: z
       .enum(["NORMAL", "ARCHIVE", "JUNK", "TRASH"])
-      .default("NORMAL"),
+      .default("NORMAL")
+      .optional(),
     email: z
       .string({
         required_error: "email field is required",

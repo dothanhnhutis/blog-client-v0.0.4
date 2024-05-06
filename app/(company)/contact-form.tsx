@@ -9,11 +9,12 @@ import { CreateContact } from "@/schemas/contact";
 import { createContact } from "@/service/api/contact";
 import { toast } from "sonner";
 import { Loader2Icon } from "lucide-react";
+import crypto from "crypto-js";
 
 export const ContactForm = () => {
   const [form, setForm] = useState<CreateContact>(() => {
     const init: CreateContact = {
-      sessionId: "",
+      requestId: "",
       name: "",
       phone: "",
       email: "",
@@ -21,7 +22,12 @@ export const ContactForm = () => {
       description: "",
     };
     if (typeof window != "undefined") {
-      init.sessionId = window.localStorage.getItem("sessionId") || "";
+      let requestId = window.localStorage.getItem("requestId");
+      if (!requestId) {
+        requestId = crypto.MD5(new Date().toISOString()).toString();
+        window.localStorage.setItem("requestId", requestId);
+      }
+      init.requestId = requestId;
     }
     return init;
   });
@@ -123,7 +129,7 @@ export const ContactForm = () => {
             form.phone == "" ||
             form.description == "" ||
             form.productName == "" ||
-            form.sessionId == ""
+            form.requestId == ""
           }
           variant="default"
           className="w-full"

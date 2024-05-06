@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { ImperativePanelHandle, PanelOnCollapse } from "react-resizable-panels";
+import { ImperativePanelHandle } from "react-resizable-panels";
 import { MdOutlineMarkEmailUnread } from "react-icons/md";
 
 import {
@@ -9,14 +9,11 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
-import { useSocket } from "@/components/providers/socket-provider";
 import { cn } from "@/lib/utils";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import {
   ArchiveIcon,
-  ArchiveXIcon,
   ArrowLeftIcon,
-  ChevronsUpDown,
   InboxIcon,
   OctagonAlertIcon,
   PanelLeftClose,
@@ -37,15 +34,20 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { vi } from "date-fns/locale";
+import {
+  useIsSocketConnected,
+  useSocketIoClient,
+} from "@/hook/useSocketIoClient";
 
 const ContactPage = () => {
-  const { socket } = useSocket();
   const ref = useRef<ImperativePanelHandle>(null);
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [tab, setTab] = useState<string>("Inbox");
   const [selected, setSelected] = useState<Contact>();
+
+  const clientSocket = useSocketIoClient();
+  const isSocketConnected = useIsSocketConnected();
 
   useEffect(() => {
     const fetchContacts = async () => {
@@ -56,14 +58,15 @@ const ContactPage = () => {
   }, []);
 
   useEffect(() => {
-    if (socket)
-      socket.on("contact", (data: Contact) => {
-        setContacts((prev) => [data, ...prev]);
-      });
+    if (!clientSocket) return;
+
+    clientSocket.on("contact", (data: Contact) => {
+      setContacts((prev) => [data, ...prev]);
+    });
     return () => {
-      if (socket) socket?.off("contact");
+      if (clientSocket) clientSocket?.off("contact");
     };
-  }, [socket]);
+  }, [clientSocket]);
 
   const handleActionContact = async (id: string, data: EditContact) => {
     setSelected(undefined);

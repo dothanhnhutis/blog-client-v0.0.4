@@ -32,7 +32,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <SocketProvider>{children}</SocketProvider>
+          {children}
         </ThemeProvider>
         <Toaster visibleToasts={5} richColors />
       </body>
